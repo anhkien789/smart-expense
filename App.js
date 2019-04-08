@@ -1,11 +1,4 @@
-// /**
-//  * Sample React Native App
-//  * https://github.com/facebook/react-native
-//  *
-//  * @format
-//  * @flow
-//  * @lint-ignore-every XPLATJSCOPYRIGHT1
-//  */
+//VOICE RECOGNITION
 
 // import React from 'react';
 // import {Platform, StyleSheet, Text, View, Button} from 'react-native';
@@ -93,33 +86,213 @@
 //   }
 // });
 
-import React, { Component } from 'react';
-import { Container, Header, Content, Form, Item, Input, Label, Footer, Text, Button } from 'native-base';
-export default class FixedLabelExample extends Component {
+//NAVIGATOR
+
+import React from 'react'
+import { View, Text, Image, StyleSheet, Button } from "react-native";
+import {createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator, createDrawerNavigator} from 'react-navigation';
+import { Icon } from 'native-base';
+
+import Login from './components/Login.js'
+import Register from './components/Register.js'
+import Home from './components/Home.js'
+import Profile from './components/Profile.js'
+
+
+class LoginScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Log out',
+    drawerIcon: ({ tintColor }) => (
+      <Icon name='log-out'/>
+    )
+  };
+  // static navigationOptions = {
+  //   title: 'Login',
+  // };
   render() {
+    const {navigate} = this.props.navigation;
     return (
-      <Container>
-        <Header> 
-          <Text> Smart Expense</Text>
-        </Header>
-        <Content>
-          <Form>
-            <Item fixedLabel>
-              <Label>Username</Label>
-              <Input />
-            </Item>
-            <Item fixedLabel last>
-              <Label>Password</Label>
-              <Input />
-            </Item>
-          </Form>
-        </Content>
-        <Footer>
-          <Button>
-            <Text>Start</Text>
-          </Button>
-        </Footer>
-      </Container>
+      // <Button
+      //   title="Go to Jane's profile"
+      //   onPress={() => navigate('Profile', {name: 'Jane'})}
+      // />
+      <Login navigate={navigate} />
+      // <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      //   <Text>Home Screen</Text>
+      // </View>
+      // <View style={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
+      //   <Button
+      //   onPress={() => this.props.navigation.navigate('Register')}
+      //   title="Go to notifications"
+      //   />
+      // </View>
     );
   }
 }
+
+class RegisterScreen extends React.Component {
+
+  // static navigationOptions = {
+  //   drawerLabel: 'Notifications',
+  //   drawerIcon: ({ tintColor }) => (
+  //     <Image
+  //       source={require('./components/Shopping-symbol.png')}
+  //       style={[styles.icon, {tintColor: tintColor}]}
+  //     />
+  //   ),
+  // };
+
+  render() {
+    const {navigate} = this.props.navigation;
+    return(
+      // <View style={{flex: 1,alignItems: 'center', justifyContent: 'center'}}>
+      //   <Text>Register Page</Text>
+      // </View>
+      <Register navigate={navigate}/>
+      // <View style={{flex: 1,alignItems: 'center', justifyContent: 'center'}}>
+      //   <Button
+      //   onPress={() => this.props.navigation.goBack()}
+      //   title="Go back home"
+      //   />
+      // </View>
+    )
+  }
+}
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Home',
+    drawerIcon: () => (
+      <Icon name='home'/>
+    )
+  };
+
+  render() {
+    const {navigation} = this.props;
+    return(
+      <Home navigation={navigation}/>
+    )
+  }
+}
+
+class ProfileScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: 'Profile',
+    drawerIcon: () => (
+      <Icon name='person'/>
+    )
+  };
+  
+  render() {
+    const {navigation} = this.props;
+    return(
+      <Profile navigation={navigation}/>
+    )
+  }
+}
+
+class SettingsScreen extends React.Component{
+  render() {
+    return(
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>Setting Screens</Text>
+      </View>
+    )
+  }
+}
+
+
+// const HomeStack = createStackNavigator({
+//   Home: HomeScreen,
+//   Register: RegisterScreen,
+// });
+
+// const SettingsStack = createStackNavigator({
+//   Settings: SettingsScreen,
+//   Profile: ProfileScreen,
+// },
+// {
+//   mode: 'modal',
+//   headerMode: 'none'
+// });
+
+// const MainNavigator = createBottomTabNavigator({
+//   Home: HomeStack,
+//   Settings: SettingsStack
+// });
+
+// const MainNavigator = createStackNavigator({
+//   Login: {screen: LoginScreen},
+//   Register: {screen: RegisterScreen},
+//   Home: {screen: HomeScreen}
+// },
+// {
+//   headerMode: 'none'
+// }
+// );
+
+// const LoginStack = createStackNavigator({
+//   Login: {screen: LoginScreen},
+//   Register: {screen: RegisterScreen}
+// },
+// {
+//   headerMode: 'none'
+// }
+// )
+
+const LoginStack = createStackNavigator({
+  Login: {screen: LoginScreen},
+  Register: {screen: RegisterScreen}
+},
+{
+  mode: 'card',
+  headerMode: 'none'
+}
+)
+
+const HomeStack = createDrawerNavigator({
+  Home: {screen: HomeScreen},
+  Profile: {screen: ProfileScreen},
+  Login: {screen: LoginScreen}
+})
+
+// const styles = StyleSheet.create({
+//   icon: {
+//     width: 24,
+//     height: 24,
+//   },
+// });
+
+const AppContainer = createAppContainer(createSwitchNavigator(
+  {
+    Login: LoginStack,
+    Home: HomeStack
+  }
+));
+
+export default class App extends React.Component {
+  render() {
+    return (
+      // <Login /> 
+      <AppContainer />
+    )
+  }
+}
+
+//ALL OF CHART
+
+// import React from 'react'
+// import { View } from 'react-native'
+// import PureChart from 'react-native-pure-chart';
+// import { } from 'native-base';
+
+// export default class App extends React.Component {
+//   render() {
+//     let sampleData = [30, 200, 170, 250, 10]
+//     return(
+//       <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 300, height: 300, borderWidth: 1}}>
+//         <PureChart data={sampleData} type='line' />
+//       </View>
+//     )
+//   }
+// }
