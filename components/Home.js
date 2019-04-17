@@ -21,7 +21,7 @@ export default class Home extends Component {
             <Icon name='menu' style={styles.iconmenu}/>
           </TouchableOpacity>
           <View style={styles.texthome}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Home</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Home</Text>
           </View>
         </View>
         <View style={styles.content}>
@@ -57,10 +57,10 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./FoodAndDrink-symbol.png')}/>
             </View>
             <View style={styles.foodanddrinktext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Food/Drink</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Food/Drink</Text>
             </View>
             <View style={styles.foodanddrinkprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$15</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$15</Text>
             </View>
           </View>
           <View style={styles.transportposition}>
@@ -68,10 +68,10 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./Transports-symbol.png')}/>
             </View>
             <View style={styles.transporttext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Transports</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Transports</Text>
             </View>
             <View style={styles.transportprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
             </View>
           </View>
           <View style={styles.shoppingposition}>
@@ -79,16 +79,16 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./Shopping-symbol.png')}/>
             </View>
             <View style={styles.shoppingtext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Shopping</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Shopping</Text>
             </View>
             <View style={styles.shoppingprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <View style={{marginLeft: (Dimensions.get('window').height * 1)/14 * (10/60)}}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Total: $65</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Total: $65</Text>
           </View>
         </View>
       </View>
@@ -103,11 +103,11 @@ const styles = StyleSheet.create({
   },
   header: {
     borderWidth: 1,
-    borderColor: '#F8F8F8',
+    borderColor: '#FF948F',
     marginTop: (Dimensions.get('window').height * 1)/20,
     height: (Dimensions.get('window').height * 1)/14 * (44/60),
     width: Dimensions.get('window').width,
-    backgroundColor: '#F4CBC8',
+    backgroundColor: '#FF948F',
     flexDirection: 'row',
     alignItems:'center'
   },
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   iconmenu: {
-    color: '#000000'
+    color: 'black'
   },
   texthome: {
     width: (Dimensions.get('window').width - ((Dimensions.get('window').height * 1)/14 * (50/60))*2),
@@ -235,11 +235,11 @@ const styles = StyleSheet.create({
   },
   footer: {
     borderWidth: 1,
-    borderColor: '#F8F8F8',
+    borderColor: '#FF948F',
     marginTop: (Dimensions.get('window').height * 1)/14 * (10/60),
     height: (Dimensions.get('window').height * 1)/14 * (44/60),
     width: Dimensions.get('window').width,
-    backgroundColor: '#F4CBC8',
+    backgroundColor: '#FF948F',
     flexDirection: 'row',
     alignItems:'center'
   }

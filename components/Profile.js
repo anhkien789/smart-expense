@@ -50,8 +50,13 @@ export default class Profile extends React.Component {
           <View style={styles.viewname}>
             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (40/60), fontFamily: 'Savoye LET', color: '#F8F8F8'}}>Kien Le Minh</Text>
           </View>
-          <View style={styles.viewemail}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontFamily: 'Arial Rounded MT Bold', color: '#F8F8F8'}}>Email: trungkien2012dn@gmail.com</Text>
+          <View style={styles.viewaddress}>
+            <Icon name='home' style={{color: '#F8F8F8', width: (Dimensions.get('window').height * 1)/14 * (30/60)}}/>  
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontFamily: 'Arial Rounded MT Bold', color: '#F8F8F8'}}>36A Thanh Hai</Text>
+          </View>
+          <View style={styles.viewphone}>
+            <Icon name='phone-portrait' style={{color: '#F8F8F8', width: (Dimensions.get('window').height * 1)/14 * (30/60)}}/>  
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontFamily: 'Arial Rounded MT Bold', color: '#F8F8F8'}}>0900000000</Text>
           </View>
         </View>
         <View style={styles.content}>
@@ -79,15 +84,16 @@ const styles = StyleSheet.create({
   header: {
     borderWidth: (Dimensions.get('window').height * 1)/14 * (1/60),
     borderColor: '#FF5148',
-    marginTop: (Dimensions.get('window').height * 1)/20,
-    height: (Dimensions.get('window').height * 1)/14 * (325/60),
+    // marginTop: (Dimensions.get('window').height * 1)/20,
+    height: (Dimensions.get('window').height * 1)/14 * (375/60),
     width: Dimensions.get('window').width,
     backgroundColor: '#FF5148',
     flexDirection: 'column',
   },
   viewmenuprofile: {
     flexDirection: 'row',
-    marginTop: (Dimensions.get('window').height * 1)/14 * (44/60)
+    // marginTop: (Dimensions.get('window').height * 1)/14 * (5/60)
+    marginTop: (Dimensions.get('window').height * 1)/20
   },
   button: {
     width: (Dimensions.get('window').height * 1)/14 * (50/60),
@@ -115,9 +121,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: (Dimensions.get('window').height * 1)/14 * (10/60)
   },
-  viewemail: {
+  viewaddress: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  viewphone: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   content: {
     width: (Dimensions.get('window').height * 1)/14 * (375/60),

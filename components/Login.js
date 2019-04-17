@@ -1,20 +1,57 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, Dimensions } from 'react-native'
+import { Image, StyleSheet, View, TouchableHighlight, Text, Dimensions, Alert } from 'react-native'
 import { Container, Header, Content, Form, Item, Input, Label, Footer } from 'native-base';
 
 export default class Login extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { count: 0 }
+    this.state = { 
+      userName: '', passWord: '', messages: []
+    }
   }
 
-  onPress = () => {
-    this.setState({
-      count: this.state.count+1
-    })
+  handleLogin() {
+    if (this.state.userName == '' || this.state.passWord == '') {
+      // this.setState({messages: 'Please input the Username/Password'})
+      Alert.alert('Error'
+      , 'Please input the Username/Password',
+      [
+        {
+          text: 'OK',
+        }
+      ]
+      ) 
+    } else {
+      fetch('https://smartexpenseeeee.herokuapp.com/login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName: this.state.userName,
+          passWord: this.state.passWord
+        })
+      })
+      .then(response => response.json())
+      // .then(messages => console.log(messages))
+      .then(messages => messages.message == 'Invalid, please try again' ? 
+        Alert.alert('Error'
+        , 'Invalid! Please try again!',
+        [
+          {
+            text: 'OK',
+            onPress: () => this.setState({userName: '', passWord: ''})
+          }
+        ]
+        ) 
+        // this.setState({messages: 'something wrong'})
+        : this.props.navigate('Home')
+      )
+      .catch(err => console.error('error fetching data', err))
+    }
   }
-
   render() {
     return (
       <Container style={styles.container}>
@@ -27,25 +64,27 @@ export default class Login extends Component {
               <Text style={styles.logintext}>Login</Text>
             </View>
             <View style={styles.idbox}>
-              <Input placeholder='ID:'/>
+              <Input placeholder='Username:' onChangeText={(s)=> this.setState({userName: s})} value={this.state.userName}/>
             </View>
             <View style={styles.passbox}>
-              <Input placeholder='Password:'/>
+              <Input placeholder='Password:' secureTextEntry={true} onChangeText={(s)=> this.setState({passWord: s})} value={this.state.passWord}/>
             </View>
             <View style={styles.buttonview}>
-              <TouchableHighlight style={styles.signinbutton} onPress={()=> this.props.navigate('Home')} underlayColor="red">
+              <TouchableHighlight style={styles.signinbutton} onPress={this.handleLogin.bind(this)} underlayColor="red">
                 <Text style={{color: 'white', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Sign In</Text>
               </TouchableHighlight>
               <TouchableHighlight style={styles.signupbutton} onPress={()=> this.props.navigate('Register')} underlayColor="red">
                 <Text style={{color: 'white', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Sign Up</Text>
               </TouchableHighlight>  
             </View>
+            <View style={styles.errortext}>
+              <Text style={{color: 'red', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{this.state.messages}</Text>
+            </View>
           </View>
           <View style={styles.line}/>
           <View style={styles.information}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Versions</Text>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Terms</Text>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Teams</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Versions: 1.0.0</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Team: Section 9</Text>
           </View>
         </Content>
       </Container>
@@ -110,6 +149,11 @@ const styles = StyleSheet.create({
     borderColor: '#979797',
     borderWidth: 1,
     borderRadius: (Dimensions.get('window').height * 1)/14 * (18/60)
+  },
+  errortext: {
+    marginTop: (Dimensions.get('window').height * 1)/14 * (20/60),
+    width: (Dimensions.get('window').height * 1)/14 * (230/60),
+    height: (Dimensions.get('window').height * 1)/14 * (50/60)
   },
   buttonview: {
     flexDirection: 'row',

@@ -91,7 +91,7 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, Button } from "react-native";
 import {createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator, createDrawerNavigator} from 'react-navigation';
-import { Icon } from 'native-base';
+import { Icon, DatePicker } from 'native-base';
 
 import Login from './components/Login.js'
 import Register from './components/Register.js'
@@ -161,9 +161,31 @@ class RegisterScreen extends React.Component {
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
+    // drawerLabel: ({tintColor}) => (
+    //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+    //     <DatePicker
+    //     defaultDate={new Date(2018, 4, 4)}
+    //     minimumDate={new Date(2018, 1, 1)}
+    //     maximumDate={new Date(2018, 12, 31)}
+    //     locale={"en"}
+    //     timeZoneOffsetInMinutes={undefined}
+    //     modalTransparent={false}
+    //     animationType={"fade"}
+    //     androidMode={"default"}
+    //     placeHolderText="Click to review History"
+    //     textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
+    //     placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
+    //     onDateChange={this.setDate}
+    //     disabled={false}
+    //     />
+    //   </View>),
     drawerLabel: 'Home',
-    drawerIcon: () => (
-      <Icon name='home'/>
+    drawerIcon: ({tintColor}) => (
+      <Icon name='home' style={{color: tintColor}}/>
+      // <Image
+      // source={require('./components/Shopping-symbol.png')}
+      // style={[styles.icon, {tintColor: tintColor}]}
+      // />
     )
   };
 
@@ -178,8 +200,8 @@ class HomeScreen extends React.Component {
 class ProfileScreen extends React.Component {
   static navigationOptions = {
     drawerLabel: 'Profile',
-    drawerIcon: () => (
-      <Icon name='person'/>
+    drawerIcon: ({tintColor}) => (
+      <Icon name='person' style={{color: tintColor}}/>
     )
   };
   
@@ -254,6 +276,9 @@ const HomeStack = createDrawerNavigator({
   Home: {screen: HomeScreen},
   Profile: {screen: ProfileScreen},
   Login: {screen: LoginScreen}
+},
+{
+  activeTintColor: '#FF5148'
 })
 
 // const styles = StyleSheet.create({
