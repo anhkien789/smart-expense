@@ -97,6 +97,7 @@ import Login from './components/Login.js'
 import Register from './components/Register.js'
 import Home from './components/Home.js'
 import Profile from './components/Profile.js'
+import History from './components/History.js'
 
 
 class LoginScreen extends React.Component {
@@ -213,6 +214,40 @@ class ProfileScreen extends React.Component {
   }
 }
 
+class HistoryScreen extends React.Component {
+  static navigationOptions = {
+    drawerLabel: ({tintColor}) => (
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+      <DatePicker
+      defaultDate={new Date(2018, 4, 4)}
+      minimumDate={new Date(2018, 1, 1)}
+      maximumDate={new Date(2018, 12, 31)}
+      locale={"en"}
+      timeZoneOffsetInMinutes={undefined}
+      modalTransparent={false}
+      animationType={"fade"}
+      androidMode={"default"}
+      placeHolderText="Click to review History"
+      textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
+      placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
+      onDateChange={this.setDate}
+      disabled={false}
+      />
+      </View>),
+    // drawerLabel: 'History',
+    drawerIcon: ({tintColor}) => (
+      <Icon name='timer' style={{color: tintColor}}/>
+    )
+  };
+
+  render() {
+    const {navigation} = this.props;
+    return(
+      <History navigation={navigation}/>
+    )
+  }
+}
+
 class SettingsScreen extends React.Component{
   render() {
     return(
@@ -223,51 +258,11 @@ class SettingsScreen extends React.Component{
   }
 }
 
-
-// const HomeStack = createStackNavigator({
-//   Home: HomeScreen,
-//   Register: RegisterScreen,
-// });
-
-// const SettingsStack = createStackNavigator({
-//   Settings: SettingsScreen,
-//   Profile: ProfileScreen,
-// },
-// {
-//   mode: 'modal',
-//   headerMode: 'none'
-// });
-
-// const MainNavigator = createBottomTabNavigator({
-//   Home: HomeStack,
-//   Settings: SettingsStack
-// });
-
-// const MainNavigator = createStackNavigator({
-//   Login: {screen: LoginScreen},
-//   Register: {screen: RegisterScreen},
-//   Home: {screen: HomeScreen}
-// },
-// {
-//   headerMode: 'none'
-// }
-// );
-
-// const LoginStack = createStackNavigator({
-//   Login: {screen: LoginScreen},
-//   Register: {screen: RegisterScreen}
-// },
-// {
-//   headerMode: 'none'
-// }
-// )
-
 const LoginStack = createStackNavigator({
   Login: {screen: LoginScreen},
   Register: {screen: RegisterScreen}
 },
 {
-  mode: 'card',
   headerMode: 'none'
 }
 )
@@ -275,18 +270,13 @@ const LoginStack = createStackNavigator({
 const HomeStack = createDrawerNavigator({
   Home: {screen: HomeScreen},
   Profile: {screen: ProfileScreen},
+  History: {screen: HistoryScreen},
   Login: {screen: LoginScreen}
 },
 {
   activeTintColor: '#FF5148'
 })
 
-// const styles = StyleSheet.create({
-//   icon: {
-//     width: 24,
-//     height: 24,
-//   },
-// });
 
 const AppContainer = createAppContainer(createSwitchNavigator(
   {

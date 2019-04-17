@@ -29,7 +29,7 @@ export default class Home extends Component {
             <Image style={{width: (Dimensions.get('window').height * 1)/14 * (58/60), height: (Dimensions.get('window').height * 1)/14 * (58/60)}} source={require('./Smartexpense-Logo.png')}/>
           </View>
           <View style={styles.dateposition}>
-            <View style={styles.datepicker}>
+            {/* <View style={styles.datepicker}>
               <DatePicker
               defaultDate={new Date(2018, 4, 4)}
               minimumDate={new Date(2018, 1, 1)}
@@ -45,7 +45,7 @@ export default class Home extends Component {
               onDateChange={this.setDate}
               disabled={false}
               />
-            </View>
+            </View> */}
             <View style={styles.dateview}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>
                 Date: {this.state.chosenDate.toString().substr(4, 12)}
@@ -82,7 +82,7 @@ export default class Home extends Component {
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Shopping</Text>
             </View>
             <View style={styles.shoppingprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$30</Text>
             </View>
           </View>
         </View>
@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').height * 1)/14 * (364/60),
     borderColor: '#979797',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   datepicker: {
     borderWidth: 1,
