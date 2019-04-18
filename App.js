@@ -98,7 +98,7 @@ import Register from './components/Register.js'
 import Home from './components/Home.js'
 import Profile from './components/Profile.js'
 import History from './components/History.js'
-
+import InfoPage from './components/InfoPage.js'
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -248,6 +248,15 @@ class HistoryScreen extends React.Component {
   }
 }
 
+class InfoScreen extends React.Component{
+  render() {
+    const {navigate} = this.props.navigation;
+    return(
+      <InfoPage navigate={navigate} />
+    )
+  }
+}
+
 class SettingsScreen extends React.Component{
   render() {
     return(
@@ -260,7 +269,8 @@ class SettingsScreen extends React.Component{
 
 const LoginStack = createStackNavigator({
   Login: {screen: LoginScreen},
-  Register: {screen: RegisterScreen}
+  Register: {screen: RegisterScreen},
+  Info: {screen: InfoScreen}
 },
 {
   headerMode: 'none'
@@ -311,3 +321,5 @@ export default class App extends React.Component {
 //     )
 //   }
 // }
+
+

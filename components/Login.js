@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, Dimensions, Alert } from 'react-native'
+import { Image, StyleSheet, View, TouchableHighlight, Text, Dimensions, Alert,TouchableOpacity } from 'react-native'
 import { Container, Header, Content, Form, Item, Input, Label, Footer } from 'native-base';
 
 export default class Login extends Component {
@@ -83,8 +83,14 @@ export default class Login extends Component {
           </View>
           <View style={styles.line}/>
           <View style={styles.information}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Versions: 1.0.0</Text>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}} onPress={this.onPress}>Team: Section 9</Text>
+            <TouchableOpacity style={{borderBottomWidth: 1, borderBottomColor: 'blue'}}>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Versions: 1.0.0</Text>
+            </TouchableOpacity>
+            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Versions: 1.0.0</Text> */}
+            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}} onPress={()=> this.props.navigate('Info')}>Team: Section 9</Text> */}
+            <TouchableOpacity style={{borderBottomWidth: 1, borderBottomColor: 'blue'}} onPress={()=> this.props.navigate('Info')}>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Team: Section 9</Text>
+            </TouchableOpacity>
           </View>
         </Content>
       </Container>

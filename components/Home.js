@@ -1,19 +1,152 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions, Button, Alert } from 'react-native'
 import { Container, Header, Content, Form, Item, Input, Label, Footer, Icon, DatePicker } from 'native-base';
+
+import Voice from 'react-native-voice'
+
+var status = ''
+var money = ''
 
 export default class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { chosenDate: new Date() };
+    this.state = { 
+      chosenDate: new Date(),
+      recognized: '',
+      started: '',
+      // categories: ['Food', 'Transport', 'Shopping'],
+      results: [],
+      foodmoney: ''
+      // status: '',
+      // currentCategory: '', amount: 0,
+      // str: []
+    };
     this.setDate = this.setDate.bind(this);
+     
+    Voice.onSpeechStart = this.onSpeechStart.bind(this)
+    Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
+    Voice.onSpeechResults = this.onSpeechResults.bind(this)
   }
+
   setDate(newDate) {
     this.setState({ chosenDate: newDate });
   }
 
+  componentWillUnmount() {
+    Voice.destroy().then(Voice.removeAllListeners)
+  }
+
+  onSpeechStart(e){
+    this.setState({
+      started: '√'
+    })
+  }
+
+  onSpeechRecognized(e){
+    this.setState({
+      recognized: '√'
+    })
+  }
+
+  onSpeechResults(e){
+    this.setState({
+      results: e.value
+    })
+  }
+
+  // async startRecognition(e){
+  //   this.setState({
+  //     recognized: '',
+  //     started: '',
+  //     results: []
+  //   })
+  //   try {
+  //     await Voice.start('en-US')
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
+  async componentDidMount(){
+    this.setState({
+      recognized: '',
+      started: '',
+      results: []
+    })
+    try {
+      await Voice.start('en-US')
+    } catch (error) {
+      console.error(error)
+    }
+    // this.state.results == 'Hello' ? alert("It work") : <Text>something wrong</Text>
+    // this.state.results.map((r) => {
+    //   if (r == 'hello ' || r == 'Hello ' || r == ' hello' || r == ' Hello') {
+    //     // return(
+    //     //   alert("It work!")
+    //     // )
+    //     // Alert.alert('Voice Recognition'
+    //     // , 'Keyword: expense',
+    //     // [
+    //     //   {
+    //     //     text: 'OK',
+    //     //   }
+    //     // ]
+    //     // )
+    //     alert("It works!") 
+    //   }
+    //   // console.log(r) 
+    // })
+    // alert("It work!")
+  }
+
+  // handleStatus(e) {
+  //   this.setState({status: e})
+  // }
+ 
   render() {
+    var str = this.state.results[0];
+    if (str != undefined) {
+      // this.setState({str: this.state.results.split(' ')})
+      var res = str.split(' ');
+      console.log(res)
+      res.map((r,i) => {
+        if (status == '' && (r == 'spending' || r == 'Spending')) {
+          // this.handleStatus('spending')
+          // console.log(this.state.status)
+          status = 'spending'
+          console.log(status)
+        } else if (status == 'spending' && r == 'food') {
+          status = 'food'
+          console.log(status)
+        } else if (status == 'food' && r == 'amount') {
+          status = 'amount'
+          console.log(status)
+        } else if (status == 'amount' && r.indexOf('$') == 0) {
+          status = r
+          // money = r
+          Alert.alert('Amount'
+          , 'Do you mean ' + status + '?',
+          [
+            {
+              text: 'OK',
+              onPress: () => this.setState({foodmoney: status})
+            }
+          ]
+          ) 
+        }
+      })
+    } else {
+
+    }
+  
+    // console.log(this.state.str)
+    // const res = str.split(' ');
+    // console.log(res);
+    // const resSplit = this.state.results.split(' ') 
+    // const str = 'Browse appdividend.com and enjoy coding';
+    // const res = str.split(' ');
+    // console.log(str);
     return (
       <View style={styles.containter}>
         <View style={styles.header}>
@@ -60,7 +193,7 @@ export default class Home extends Component {
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Food/Drink</Text>
             </View>
             <View style={styles.foodanddrinkprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$15</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{this.state.foodmoney}</Text>
             </View>
           </View>
           <View style={styles.transportposition}>
@@ -84,6 +217,24 @@ export default class Home extends Component {
             <View style={styles.shoppingprice}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$30</Text>
             </View>
+          </View>
+          <View style={styles.viewvoice}>
+            {/* <Button style={styles.buttonstart} onPress={this.startRecognition.bind(this)} title="Start"/> */}
+            <Text style={styles.transcript}>Transcript</Text>
+            <Text>{this.state.results}</Text>
+            {/* {this.state.results.map((result,i) =>
+              <Text style={styles.result} key={i}>{result}</Text>
+            )} */}
+            {/* {this.state.results.map((result,i) =>
+              <Text style={styles.result} key={i}>{i}</Text>
+            )} */}
+            {/* {this.state.results.map((result,i) => {
+              if (result == 'hello ' || result == 'Hello ' || result == ' hello' || result == ' Hello' ) {
+                <Text>It works!</Text>
+              }
+            })} */}
+            {/* {resSplit.map((res,i) => <Text key={i}>{res}</Text>)} */}
+            {/* {this.state.results == 'Hello' ? alert("It work") : <Text>something wrong</Text>} */}
           </View>
         </View>
         <View style={styles.footer}>
@@ -243,5 +394,107 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF948F',
     flexDirection: 'row',
     alignItems:'center'
+  },
+  viewvoice: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  buttonstart: {
+    padding: 10
+  },
+  transcript: {
+    padding: 10
+  },
+  result: {
+    color: 'red'
   }
 })
+
+
+// import React from 'react';
+// import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+
+// import Voice from 'react-native-voice'
+
+// export default class App extends React.Component {
+
+//   constructor(Props) {
+//     super(Props)
+//     this.state = {
+//       recognized: '',
+//       started: '',
+//       results: []
+//     }
+
+//     Voice.onSpeechStart = this.onSpeechStart.bind(this)
+//     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
+//     Voice.onSpeechResults = this.onSpeechResults.bind(this)
+//   }
+
+//   componentWillUnmount() {
+//     Voice.destroy().then(Voice.removeAllListeners)
+//   }
+
+//   onSpeechStart(e){
+//     this.setState({
+//       started: '√'
+//     })
+//   }
+
+//   onSpeechRecognized(e){
+//     this.setState({
+//       recognized: '√'
+//     })
+//   }
+
+//   onSpeechResults(e){
+//     this.setState({
+//       results: e.value
+//     })
+//   }
+
+//   async startRecognition(e){
+//     this.setState({
+//       recognized: '',
+//       started: '',
+//       results: []
+//     })
+//     try {
+//       await Voice.start('en-US')
+//     } catch (error) {
+//       console.error(error)
+//     }
+//   }
+
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <Button style={styles.button} onPress={this.startRecognition.bind(this)} title="Start"/>
+//         <Text style={styles.transcript}>Transcript</Text>
+//         {this.state.results.map((result,i) =>
+//           <Text style={styles.result} key={i}>{result}</Text>
+//         )}
+//       </View>
+//     );
+//   }
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   button: {
+//     padding: 10
+//   },
+//   transcript: {
+//     padding: 10
+//   },
+//   result: {
+//     color: 'red'
+//   }
+// });
