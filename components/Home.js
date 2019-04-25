@@ -172,7 +172,7 @@ export default class Home extends Component {
           // money = r
           //console.log(status)
           Alert.alert('Amount of food'
-          , 'Do you mean ' + '$' + status + '?',
+          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
           [
             {
               text: 'Confirm',
@@ -194,7 +194,7 @@ export default class Home extends Component {
           // money = r
           //console.log(status)
           Alert.alert('Amount of transport'
-          , 'Do you mean ' + '$' + status + '?',
+          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
           [
             {
               text: 'Confirm',
@@ -216,7 +216,7 @@ export default class Home extends Component {
           // money = r
           //console.log(status)
           Alert.alert('Amount of shopping'
-          , 'Do you mean ' + '$' + status + '?',
+          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
           [
             {
               text: 'Confirm',
@@ -322,7 +322,7 @@ export default class Home extends Component {
                             status == 'food' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Food Category. Please say number to save money!</Text> : 
                             status == 'transport' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Transport Category. Please say number to save money!</Text> : 
                             status == 'shopping' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Shopping Category. Please say number to save money!</Text> :
-                            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Click "Confirm" to save money OR "Deny" to start again!</Text>
+                            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}></Text>
             }
           </View>
         </View>
