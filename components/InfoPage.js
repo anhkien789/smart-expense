@@ -9,10 +9,10 @@ import {
   } from 'react-native';
 import { Container, Header, Content, Accordion, Icon } from "native-base";
 const dataArray = [
-  { title: "Le Minh Trung Kien", content: '_Specific Jobs: Coder & Designer\n\n_Email: s3651471@rmit.edu.vn'  },
-  { title: "Nguyen Quoc Khanh", content: '_Specific Jobs: Coder for Back-end\n\n_Email: s3651072@rmit.edu.vn' },
-  { title: "Vu Dinh Hoang", content: '_Specific Jobs: Coder & Designer\n\n_Email: s3681437@rmit.edu.vn'},
-  { title: "Ninh Ngoc Phuong Trung", content: '_Specific Jobs: Coder & Designer\n\n_Email: s3574912@rmit.edu.vn' }
+  { title: "Le Minh Trung Kien", content: '+Specific Jobs: Coder & Designer\n\n+Email: s3651471@rmit.edu.vn'  },
+  { title: "Nguyen Quoc Khanh", content: '+Specific Jobs: Coder for Back-end\n\n+Email: s3651072@rmit.edu.vn' },
+  { title: "Vu Dinh Hoang", content: '+Specific Jobs: Project Manager\n\n+Email: s3681437@rmit.edu.vn'},
+  { title: "Ninh Ngoc Phuong Trung", content: '+Specific Jobs: Coder & Designer\n\n+Email: s3574912@rmit.edu.vn' }
 ];
 
 export default class InfoPage extends React.Component {

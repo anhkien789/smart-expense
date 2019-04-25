@@ -15,18 +15,19 @@ export default class Home extends Component {
       chosenDate: new Date(),
       recognized: '',
       started: '',
-      // categories: ['Food', 'Transport', 'Shopping'],
       results: [],
       foodmoney: '0',
-      // status: '',
-      // currentCategory: '', amount: 0,
-      // str: []
+      transportmoney: '0',
+      shoppingmoney: '0'
     };
     this.setDate = this.setDate.bind(this);
      
     Voice.onSpeechStart = this.onSpeechStart.bind(this)
+    Voice.onSpeechEnd = this.onSpeechEnd.bind(this)
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
     Voice.onSpeechResults = this.onSpeechResults.bind(this)
+
+    this.startAgain.bind(this)
   }
 
   setDate(newDate) {
@@ -41,6 +42,10 @@ export default class Home extends Component {
     this.setState({
       started: '√'
     })
+  }
+
+  onSpeechEnd(e) {
+    console.log('onSpeechEnd')
   }
 
   onSpeechStartReset(e){
@@ -102,27 +107,47 @@ export default class Home extends Component {
   // handleStatus(e) {
   //   this.setState({status: e})
   // }
-  async handleDeny() {
-    status = ''
-    // this.setState({results: []})
-    // Voice.destroy().then(Voice.start('en-US'))
-    Voice.stop()
-    // .then(Voice.removeAllListeners)
-    .then(this.setState({
+  async handleDeny(e) {
+    // e = []
+    // console.log(e)
+    Voice.cancel()
+    .then(status = '')
+    .then(this.startAgain.bind(this))
+  }
+
+  async startAgain(e){
+    console.log('startRecognition')
+    this.setState({
       recognized: '',
       started: '',
       results: []
-    }))
-    // .then(() => 
-    // { 
-    //   Voice.onSpeechStart = this.onSpeechStartReset.bind(this)
-    //   Voice.onSpeechRecognized = this.onSpeechRecognizedReset.bind(this)
-    //   Voice.onSpeechResults = this.onSpeechResultsReset.bind(this)
-    // }
-    // ) 
-    // .then(Voice.start('en-US'))
-    .then(await Voice.start('en-US'))
-    console.log(this.state.results)
+    })
+    try {
+      await Voice.start('en-US')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async handleChangeFoodMoney() {
+    this.setState({foodmoney: status})
+    Voice.cancel()
+    .then(status = '')
+    .then(this.startAgain.bind(this))
+  }
+
+  async handleChangeTransportMoney() {
+    this.setState({transportmoney: status})
+    Voice.cancel()
+    .then(status = '')
+    .then(this.startAgain.bind(this))
+  }
+
+  async handleChangeShoppingMoney() {
+    this.setState({shoppingmoney: status})
+    Voice.cancel()
+    .then(status = '')
+    .then(this.startAgain.bind(this))
   }
  
   render() {
@@ -137,18 +162,65 @@ export default class Home extends Component {
           // console.log(this.state.status)
           status = 'spending'
           console.log(status)
-        } else if (status == 'spending' && r == 'food') {
+        } 
+        else if (status == 'spending' && r == 'food') {
           status = 'food'
           console.log(status)
-        } else if (status == 'food' && !isNaN(r)) {
+        } 
+        else if (status == 'food' && !isNaN(r)) {
           status = r
-          // console.log(status)
-          Alert.alert('Amount'
-          , 'Do you mean ' + status + '?',
+          // money = r
+          //console.log(status)
+          Alert.alert('Amount of food'
+          , 'Do you mean ' + '$' + status + '?',
           [
             {
               text: 'Confirm',
-              onPress: () => this.setState({foodmoney: status})
+              onPress: this.handleChangeFoodMoney.bind(this)
+            },
+            {
+              text: 'Deny',
+              onPress: this.handleDeny.bind(this)
+            }
+          ]
+          ) 
+        }
+        else if (status == 'spending' && r == 'transport') {
+          status = 'transport'
+          console.log(status)
+        }
+        else if (status == 'transport' && !isNaN(r)) {
+          status = r
+          // money = r
+          //console.log(status)
+          Alert.alert('Amount of transport'
+          , 'Do you mean ' + '$' + status + '?',
+          [
+            {
+              text: 'Confirm',
+              onPress: this.handleChangeTransportMoney.bind(this)
+            },
+            {
+              text: 'Deny',
+              onPress: this.handleDeny.bind(this)
+            }
+          ]
+          ) 
+        }
+        else if (status == 'spending' && r == 'shopping') {
+          status = 'shopping'
+          console.log(status)
+        }
+        else if (status == 'shopping' && !isNaN(r)) {
+          status = r
+          // money = r
+          //console.log(status)
+          Alert.alert('Amount of shopping'
+          , 'Do you mean ' + '$' + status + '?',
+          [
+            {
+              text: 'Confirm',
+              onPress: this.handleChangeShoppingMoney.bind(this)
             },
             {
               text: 'Deny',
@@ -157,19 +229,6 @@ export default class Home extends Component {
           ]
           ) 
         } 
-        // else if (status == 'amount' && r.indexOf('$') == 0) {
-        //   status = r
-        //   // money = r
-        //   Alert.alert('Amount'
-        //   , 'Do you mean ' + status + '?',
-        //   [
-        //     {
-        //       text: 'OK',
-        //       onPress: () => this.setState({foodmoney: status})
-        //     }
-        //   ]
-        //   ) 
-        // }
       })
     } else {
 
@@ -225,7 +284,7 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./FoodAndDrink-symbol.png')}/>
             </View>
             <View style={styles.foodanddrinktext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Food/Drink</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', backgroundColor: status == 'food' ? '#FF948F' : 'white' }}>Food/Drink</Text>
             </View>
             <View style={styles.foodanddrinkprice}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{'$' + this.state.foodmoney}</Text>
@@ -236,10 +295,10 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./Transports-symbol.png')}/>
             </View>
             <View style={styles.transporttext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Transports</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', backgroundColor: status == 'transport' ? '#FF948F' : 'white'}}>Transport</Text>
             </View>
             <View style={styles.transportprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{'$' + this.state.transportmoney}</Text>
             </View>
           </View>
           <View style={styles.shoppingposition}>
@@ -247,34 +306,29 @@ export default class Home extends Component {
               <Image style={{width: (Dimensions.get('window').height * 1)/14 * (55/60), height: (Dimensions.get('window').height * 1)/14 * (55/60)}} source={require('./Shopping-symbol.png')}/>
             </View>
             <View style={styles.shoppingtext}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Shopping</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', backgroundColor: status == 'shopping' ? '#FF948F' : 'white'}}>Shopping</Text>
             </View>
             <View style={styles.shoppingprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$30</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{'$' + this.state.shoppingmoney}</Text>
             </View>
           </View>
           <View style={styles.viewvoice}>
-            {/* <Button style={styles.buttonstart} onPress={this.startRecognition.bind(this)} title="Start"/> */}
+            {/* <Button style={styles.buttonstart} onPress={this.startAgain.bind(this)} title="Start"/>
             <Text style={styles.transcript}>Transcript</Text>
-            <Text>{this.state.results}</Text>
-            {/* {this.state.results.map((result,i) =>
-              <Text style={styles.result} key={i}>{result}</Text>
-            )} */}
-            {/* {this.state.results.map((result,i) =>
-              <Text style={styles.result} key={i}>{i}</Text>
-            )} */}
-            {/* {this.state.results.map((result,i) => {
-              if (result == 'hello ' || result == 'Hello ' || result == ' hello' || result == ' Hello' ) {
-                <Text>It works!</Text>
-              }
-            })} */}
-            {/* {resSplit.map((res,i) => <Text key={i}>{res}</Text>)} */}
-            {/* {this.state.results == 'Hello' ? alert("It work") : <Text>something wrong</Text>} */}
+            <Text>{this.state.results}</Text> */}
+            <Icon name='mic'/>
+            {status == '' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Please say "Spending" to activate Voice Recognition System!</Text> : 
+                            status == 'spending' || status == 'Spending' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Voice is activated! Please say "Food", "Transport" or "Shopping" to choose category.</Text> : 
+                            status == 'food' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Food Category. Please say number to save money!</Text> : 
+                            status == 'transport' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Transport Category. Please say number to save money!</Text> : 
+                            status == 'shopping' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>You choosed Shopping Category. Please say number to save money!</Text> :
+                            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Click "Confirm" to save money OR "Deny" to start again!</Text>
+            }
           </View>
         </View>
         <View style={styles.footer}>
           <View style={{marginLeft: (Dimensions.get('window').height * 1)/14 * (10/60)}}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Total: $65</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Total: ${  Number(this.state.foodmoney) + Number(this.state.transportmoney) + Number(this.state.shoppingmoney)}</Text>
           </View>
         </View>
       </View>
@@ -434,7 +488,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    width: (Dimensions.get('window').height * 1)/14 * (340/60)
   },
   buttonstart: {
     padding: 10

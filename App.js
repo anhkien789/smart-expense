@@ -21,28 +21,33 @@
 //   }
 
 //   componentWillUnmount() {
+//     console.log('componentWillUnmount')
 //     Voice.destroy().then(Voice.removeAllListeners)
 //   }
 
 //   onSpeechStart(e){
+//     console.log('onSpeechStart')
 //     this.setState({
 //       started: '√'
 //     })
 //   }
 
 //   onSpeechRecognized(e){
+//     console.log('onSpeechRecognized')
 //     this.setState({
 //       recognized: '√'
 //     })
 //   }
 
 //   onSpeechResults(e){
+//     console.log('onSpeechResults')
 //     this.setState({
 //       results: e.value
 //     })
 //   }
 
 //   async startRecognition(e){
+//     console.log('startRecognition')
 //     this.setState({
 //       recognized: '',
 //       started: '',
@@ -55,10 +60,19 @@
 //     }
 //   }
 
+//   stopRecognition() {
+//     console.log('stopRecognition')
+//     // Voice.destroy().then(Voice.removeAllListeners)
+//     // Voice.removeAllListeners()
+//     Voice.cancel()
+//   }
+
 //   render() {
+//     console.log(this.state.results)
 //     return (
 //       <View style={styles.container}>
 //         <Button style={styles.button} onPress={this.startRecognition.bind(this)} title="Start"/>
+//         <Button style={styles.button} onPress={this.stopRecognition.bind(this)} title="Stop"/>
 //         <Text style={styles.transcript}>Transcript</Text>
 //         {this.state.results.map((result,i) =>
 //           <Text style={styles.result} key={i}>{result}</Text>
@@ -304,22 +318,22 @@ export default class App extends React.Component {
   }
 }
 
-//ALL OF CHART
+// //ALL OF CHART
 
-// import React from 'react'
-// import { View } from 'react-native'
-// import PureChart from 'react-native-pure-chart';
-// import { } from 'native-base';
+// // import React from 'react'
+// // import { View } from 'react-native'
+// // import PureChart from 'react-native-pure-chart';
+// // import { } from 'native-base';
 
-// export default class App extends React.Component {
-//   render() {
-//     let sampleData = [30, 200, 170, 250, 10]
-//     return(
-//       <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 300, height: 300, borderWidth: 1}}>
-//         <PureChart data={sampleData} type='line' />
-//       </View>
-//     )
-//   }
-// }
+// // export default class App extends React.Component {
+// //   render() {
+// //     let sampleData = [30, 200, 170, 250, 10]
+// //     return(
+// //       <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 300, height: 300, borderWidth: 1}}>
+// //         <PureChart data={sampleData} type='line' />
+// //       </View>
+// //     )
+// //   }
+// // }
 
 
