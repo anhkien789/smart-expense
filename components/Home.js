@@ -16,9 +16,11 @@ export default class Home extends Component {
       recognized: '',
       started: '',
       results: [],
-      foodmoney: '0',
-      transportmoney: '0',
-      shoppingmoney: '0'
+      foodmoney: 0,
+      transportmoney: 0,
+      shoppingmoney: 0,
+      expenseId: '',
+      total: 0
     };
     this.setDate = this.setDate.bind(this);
      
@@ -92,6 +94,52 @@ export default class Home extends Component {
   // }
 
   async componentDidMount(){
+    fetch('https://smartexpenseeeee.herokuapp.com/checkExpenseExist', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: JSON.parse(this.props.userId)
+      })
+    })
+    .then(response => response.json())
+    //.then(response => console.log(response))
+    .then(response => response.length == 0 ?
+      fetch('https://smartexpenseeeee.herokuapp.com/addExpense', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          foodOdrink: 0,
+          transportation: 0,
+          shopping: 0,
+          total: 0,
+          userId: JSON.parse(this.props.userId)
+        })
+      })
+      .then(response => response.json())
+      .then(response => this.setState({
+        foodmoney: response.foodOdrink,
+        transportmoney: response.transportation,
+        shoppingmoney: response.shopping,
+        total: response.total,
+        expenseId: response._id
+      }))
+      .catch(err => console.error('error fetching data', err))
+      //: console.log(response[0])
+      : this.setState({
+        foodmoney: response[0].foodOdrink,
+        transportmoney: response[0].transportation,
+        shoppingmoney: response[0].shopping,
+        total: response[0].total,
+        expenseId: response[0]._id
+      })
+    )
+    .catch(err => console.error('error fetching data', err))
     this.setState({
       recognized: '',
       started: '',
@@ -130,21 +178,66 @@ export default class Home extends Component {
   }
 
   async handleChangeFoodMoney() {
-    this.setState({foodmoney: status})
+    this.setState({
+      foodmoney: this.state.foodmoney + Number(status),
+      total: this.state.total + Number(status)
+    })
+    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        foodOdrink: this.state.foodmoney,
+        // transportation: 0,
+        // shopping: 0,
+        total: this.state.total,
+      })
+    })
     Voice.cancel()
     .then(status = '')
     .then(this.startAgain.bind(this))
   }
 
   async handleChangeTransportMoney() {
-    this.setState({transportmoney: status})
+    this.setState({
+      transportmoney: this.state.transportmoney + Number(status),
+      total: this.state.total + Number(status)
+    })
+    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        transportation: this.state.transportmoney,
+        // shopping: 0,
+        total: this.state.total,
+      })
+    })
     Voice.cancel()
     .then(status = '')
     .then(this.startAgain.bind(this))
   }
 
   async handleChangeShoppingMoney() {
-    this.setState({shoppingmoney: status})
+    this.setState({
+      shoppingmoney: this.state.shoppingmoney + Number(status),
+      total: this.state.total + Number(status)
+    })
+    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        shopping: this.state.shoppingmoney,
+        total: this.state.total,
+      })
+    })
     Voice.cancel()
     .then(status = '')
     .then(this.startAgain.bind(this))
@@ -249,6 +342,7 @@ export default class Home extends Component {
           </TouchableOpacity>
           <View style={styles.texthome}>
             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Home</Text>
+            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>{JSON.parse(this.props.userId)}</Text> */}
           </View>
         </View>
         <View style={styles.content}>
@@ -256,23 +350,6 @@ export default class Home extends Component {
             <Image style={{width: (Dimensions.get('window').height * 1)/14 * (58/60), height: (Dimensions.get('window').height * 1)/14 * (58/60)}} source={require('./Smartexpense-Logo.png')}/>
           </View>
           <View style={styles.dateposition}>
-            {/* <View style={styles.datepicker}>
-              <DatePicker
-              defaultDate={new Date(2018, 4, 4)}
-              minimumDate={new Date(2018, 1, 1)}
-              maximumDate={new Date(2018, 12, 31)}
-              locale={"en"}
-              timeZoneOffsetInMinutes={undefined}
-              modalTransparent={false}
-              animationType={"fade"}
-              androidMode={"default"}
-              placeHolderText="Choose Date"
-              textStyle={{ color: "black", fontFamily: 'Arial Rounded MT Bold' }}
-              placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
-              onDateChange={this.setDate}
-              disabled={false}
-              />
-            </View> */}
             <View style={styles.dateview}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>
                 Date: {this.state.chosenDate.toString().substr(4, 12)}
@@ -287,7 +364,7 @@ export default class Home extends Component {
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', backgroundColor: status == 'food' ? '#FF948F' : 'white' }}>Food/Drink</Text>
             </View>
             <View style={styles.foodanddrinkprice}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{'$' + this.state.foodmoney}</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (20/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>${this.state.foodmoney}</Text>
             </View>
           </View>
           <View style={styles.transportposition}>
@@ -328,7 +405,7 @@ export default class Home extends Component {
         </View>
         <View style={styles.footer}>
           <View style={{marginLeft: (Dimensions.get('window').height * 1)/14 * (10/60)}}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Total: ${  Number(this.state.foodmoney) + Number(this.state.transportmoney) + Number(this.state.shoppingmoney)}</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Total: ${this.state.total}</Text>
           </View>
         </View>
       </View>

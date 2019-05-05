@@ -114,6 +114,13 @@ import Profile from './components/Profile.js'
 import History from './components/History.js'
 import InfoPage from './components/InfoPage.js'
 
+var idUser = ''
+var addressUser = ''
+var incomeUser = 0
+var phoneUser = ''
+var savingUser = 0
+var nameUser = ''
+
 class LoginScreen extends React.Component {
   static navigationOptions = {
     drawerLabel: 'Log out',
@@ -176,38 +183,31 @@ class RegisterScreen extends React.Component {
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    // drawerLabel: ({tintColor}) => (
-    //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-    //     <DatePicker
-    //     defaultDate={new Date(2018, 4, 4)}
-    //     minimumDate={new Date(2018, 1, 1)}
-    //     maximumDate={new Date(2018, 12, 31)}
-    //     locale={"en"}
-    //     timeZoneOffsetInMinutes={undefined}
-    //     modalTransparent={false}
-    //     animationType={"fade"}
-    //     androidMode={"default"}
-    //     placeHolderText="Click to review History"
-    //     textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
-    //     placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
-    //     onDateChange={this.setDate}
-    //     disabled={false}
-    //     />
-    //   </View>),
     drawerLabel: 'Home',
     drawerIcon: ({tintColor}) => (
       <Icon name='home' style={{color: tintColor}}/>
-      // <Image
-      // source={require('./components/Shopping-symbol.png')}
-      // style={[styles.icon, {tintColor: tintColor}]}
-      // />
     )
   };
 
   render() {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
+    const userId = navigation.getParam('userId', 'No-Id')
+    const address = navigation.getParam('address', 'No-address')
+    const income = navigation.getParam('income', 'No-income')
+    const phone = navigation.getParam('phone', 'No-phone')
+    const saving = navigation.getParam('saving', 'No-saving')
+    const userName = navigation.getParam('userName', 'No-userName')
+    idUser = userId
+    addressUser = address
+    incomeUser = income
+    phoneUser = phone
+    savingUser = saving
+    nameUser = userName
     return(
-      <Home navigation={navigation}/>
+      <Home 
+        navigation={navigation} 
+        userId = {JSON.stringify(userId)}
+      />
     )
   }
 }
@@ -223,7 +223,15 @@ class ProfileScreen extends React.Component {
   render() {
     const {navigation} = this.props;
     return(
-      <Profile navigation={navigation}/>
+      <Profile 
+        navigation={navigation}
+        userId = {JSON.stringify(idUser)}
+        address = {JSON.stringify(addressUser)}
+        income = {JSON.stringify(incomeUser)}
+        phone = {JSON.stringify(phoneUser)}
+        saving = {JSON.stringify(savingUser)}
+        userName = {JSON.stringify(nameUser)}
+      />
     )
   }
 }
@@ -304,12 +312,16 @@ const HomeStack = createDrawerNavigator({
 
 const AppContainer = createAppContainer(createSwitchNavigator(
   {
-    Login: LoginStack,
-    Home: HomeStack
+    LoginPage: LoginStack,
+    HomePage: HomeStack
   }
 ));
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {userId: ''}
+  }
   render() {
     return (
       // <Login /> 

@@ -47,7 +47,15 @@ export default class Login extends Component {
         ]
         ) 
         // this.setState({messages: 'something wrong'})
-        : this.props.navigate('Home')
+        : this.props.navigate('Home', {
+          userId: messages._id,
+          address: messages.address,
+          income: messages.income,
+          phone: messages.phone,
+          saving: messages.saving,
+          userName: messages.userName
+        })
+        // : console.log(messages._id)
       )
       .catch(err => console.error('error fetching data', err))
     }
