@@ -3,9 +3,12 @@ import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Di
 import { Container, Header, Content, Form, Item, Input, Label, Footer, Icon, DatePicker } from 'native-base';
 
 import Voice from 'react-native-voice'
+import Modal from 'react-native-modal'
 
 var status = ''
 var money = ''
+var category = ''
+var visibleModal123 = null
 
 export default class Home extends Component {
 
@@ -20,8 +23,14 @@ export default class Home extends Component {
       transportmoney: 0,
       shoppingmoney: 0,
       expenseId: '',
-      total: 0
-    };
+      total: 0,
+      visibleModal: ''
+    }; 
+
+    status = JSON.parse(this.props.newStatus)
+    money = JSON.parse(this.props.newMoney)
+    category = JSON.parse(this.props.newCategory)
+
     this.setDate = this.setDate.bind(this);
      
     Voice.onSpeechStart = this.onSpeechStart.bind(this)
@@ -29,6 +38,7 @@ export default class Home extends Component {
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
     Voice.onSpeechResults = this.onSpeechResults.bind(this)
 
+    this.handleDeny.bind(this)
     this.startAgain.bind(this)
   }
 
@@ -94,6 +104,7 @@ export default class Home extends Component {
   // }
 
   async componentDidMount(){
+    
     fetch('https://smartexpenseeeee.herokuapp.com/checkExpenseExist', {
       method: 'POST',
       headers: {
@@ -155,11 +166,15 @@ export default class Home extends Component {
   // handleStatus(e) {
   //   this.setState({status: e})
   // }
-  async handleDeny(e) {
+  async handleDeny() {
     // e = []
     // console.log(e)
     Voice.cancel()
-    .then(status = '')
+    .then(
+      status = '',
+      category = '',
+      money = ''
+    )
     .then(this.startAgain.bind(this))
   }
 
@@ -179,65 +194,48 @@ export default class Home extends Component {
 
   async handleChangeFoodMoney() {
     this.setState({
-      foodmoney: this.state.foodmoney + Number(status),
-      total: this.state.total + Number(status)
-    })
-    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        foodOdrink: this.state.foodmoney,
-        // transportation: 0,
-        // shopping: 0,
-        total: this.state.total,
-      })
+      foodmoney: this.state.foodmoney + Number(money),
+      total: this.state.total + Number(money)
     })
     Voice.cancel()
-    .then(status = '')
+    .then(
+      status = '',
+      category = '',
+      money = ''
+    )
     .then(this.startAgain.bind(this))
   }
 
   async handleChangeTransportMoney() {
     this.setState({
-      transportmoney: this.state.transportmoney + Number(status),
-      total: this.state.total + Number(status)
-    })
-    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        transportation: this.state.transportmoney,
-        // shopping: 0,
-        total: this.state.total,
-      })
+      transportmoney: this.state.transportmoney + Number(money),
+      total: this.state.total + Number(money)
     })
     Voice.cancel()
-    .then(status = '')
+    .then(
+      status = '',
+      category = '',
+      money = ''
+    )
     .then(this.startAgain.bind(this))
   }
 
   async handleChangeShoppingMoney() {
     this.setState({
-      shoppingmoney: this.state.shoppingmoney + Number(status),
-      total: this.state.total + Number(status)
+      shoppingmoney: this.state.shoppingmoney + Number(money),
+      total: this.state.total + Number(money)
     })
-    fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        shopping: this.state.shoppingmoney,
-        total: this.state.total,
-      })
-    })
+    // fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+    //   method: 'PUT',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     shopping: this.state.shoppingmoney,
+    //     total: this.state.total,
+    //   })
+    // })
     Voice.cancel()
     .then(status = '')
     .then(this.startAgain.bind(this))
@@ -258,70 +256,108 @@ export default class Home extends Component {
         } 
         else if (status == 'spending' && r == 'food') {
           status = 'food'
+          category = 'food'
           console.log(status)
         } 
         else if (status == 'food' && !isNaN(r)) {
           status = r
-          // money = r
-          //console.log(status)
-          Alert.alert('Amount of food'
-          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
-          [
-            {
-              text: 'Confirm',
-              onPress: this.handleChangeFoodMoney.bind(this)
+          money = r
+          console.log(status)
+          visibleModal123 = 'fancy'
+        }
+        else if (!isNaN(status) && category == 'food' && r == 'confirm'){
+          status = r
+          console.log(status)
+          visibleModal123 = null
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
             },
-            {
-              text: 'Deny',
-              onPress: this.handleDeny.bind(this)
-            }
-          ]
-          ) 
+            body: JSON.stringify({
+              foodOdrink: this.state.foodmoney + Number(money),
+              total: this.state.total + Number(money),
+            })
+          })
+          .then(this.handleChangeFoodMoney.bind(this))
         }
         else if (status == 'spending' && r == 'transport') {
           status = 'transport'
+          category = 'transport'
           console.log(status)
         }
         else if (status == 'transport' && !isNaN(r)) {
           status = r
-          // money = r
-          //console.log(status)
-          Alert.alert('Amount of transport'
-          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
-          [
-            {
-              text: 'Confirm',
-              onPress: this.handleChangeTransportMoney.bind(this)
+          money = r
+          console.log(status)
+          visibleModal123 = 'fancy'
+        }
+        else if (!isNaN(status) && category == 'transport' && r == 'confirm'){
+          status = r
+          console.log(status)
+          visibleModal123 = null
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
             },
-            {
-              text: 'Deny',
-              onPress: this.handleDeny.bind(this)
-            }
-          ]
-          ) 
+            body: JSON.stringify({
+              transportation: this.state.transportmoney + Number(money),
+              total: this.state.total + Number(money),
+            })
+          })
+          .then(this.handleChangeTransportMoney.bind(this))
+          
+        }
+        else if (!isNaN(status) && r == 'deny'){
+          status = r
+          console.log(status)
+          visibleModal123 = null
+          {this.handleDeny()}
         }
         else if (status == 'spending' && r == 'shopping') {
           status = 'shopping'
+          category = 'shopping'
           console.log(status)
         }
         else if (status == 'shopping' && !isNaN(r)) {
           status = r
-          // money = r
-          //console.log(status)
-          Alert.alert('Amount of shopping'
-          , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
-          [
-            {
-              text: 'Confirm',
-              onPress: this.handleChangeShoppingMoney.bind(this)
+          money = r
+          console.log(status)
+          visibleModal123 = 'fancy'
+          // Alert.alert('Amount of shopping'
+          // , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
+          // [
+          //   {
+          //     text: 'Confirm',
+          //     onPress: this.handleChangeShoppingMoney.bind(this)
+          //   },
+          //   {
+          //     text: 'Deny',
+          //     onPress: this.handleDeny.bind(this)
+          //   }
+          // ]
+          // ) 
+        }
+        else if (!isNaN(status) && category == 'shopping' && r == 'confirm'){
+          status = r
+          console.log(status)
+          visibleModal123 = null
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
             },
-            {
-              text: 'Deny',
-              onPress: this.handleDeny.bind(this)
-            }
-          ]
-          ) 
-        } 
+            body: JSON.stringify({
+              shopping: this.state.shoppingmoney + Number(money),
+              total: this.state.total + Number(money),
+            })
+          })
+          .then(this.handleChangeShoppingMoney.bind(this))
+        }
       })
     } else {
 
@@ -402,6 +438,26 @@ export default class Home extends Component {
                             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}></Text>
             }
           </View>
+          <Button onPress={() => this.setState({visibleModal: 'fancy'})} title='Fancy!'/>
+          <Modal 
+            isVisible= {visibleModal123 === 'fancy'}
+            // isVisible = {this.state.visibleModal === 'fancy'}
+            backdropColor="#B4B3DB"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}
+          >
+            <View style={styles.contentModal}>
+            <Text style={styles.contentTitleModal}>Amount of {category}</Text>
+              <Text style={styles.contentTitleModal}>Do you mean ${status}?</Text>
+              <Text style={styles.contentTitleModal}>Say "Confirm" to save money OR "Deny" to start again!</Text>
+            </View>
+            <Button onPress={() => this.setState({visibleModal: null})} title='close'/>
+          </Modal>
         </View>
         <View style={styles.footer}>
           <View style={{marginLeft: (Dimensions.get('window').height * 1)/14 * (10/60)}}>
@@ -575,6 +631,19 @@ const styles = StyleSheet.create({
   },
   result: {
     color: 'red'
+  },
+  contentModal: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  contentTitleModal: {
+    fontSize: 20,
+    marginBottom: 12,
+    textAlign: 'center'
   }
 })
 

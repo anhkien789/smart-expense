@@ -53,7 +53,10 @@ export default class Login extends Component {
           income: messages.income,
           phone: messages.phone,
           saving: messages.saving,
-          userName: messages.userName
+          userName: messages.userName,
+          status: '',
+          category: '',
+          money: ''
         })
         // : console.log(messages._id)
       )

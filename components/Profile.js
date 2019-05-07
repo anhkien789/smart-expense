@@ -240,9 +240,9 @@ export default class Profile extends React.Component {
               })
             })
             .then(response => response.json())
-            .then(response => response.message == 'The saving cannot be less than 20%, please enter again !!' ?
+            .then(response => response.message == 'The saving cannot be less than 20% or more than 100% please enter again !!' ?
             this.setState({
-              errorSaving: 'Error: Saving have to more than or equal 20%',
+              errorSaving: 'Error: Saving have to more than 20%',
               editSaving: false,
               savingText: ''
             })
