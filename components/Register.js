@@ -22,7 +22,19 @@ export default class Register extends Component {
         }
       ]
       ) 
-    } else {
+    } 
+    else if (this.state.saving < 20 || isNaN(this.state.saving)) {
+      Alert.alert('Error'
+      , 'Enter saving amount,20% by default',
+      [
+        {
+          text: 'OK',
+          onPress: () => this.setState({saving: null})
+        }
+      ]
+      ) 
+    }
+    else {
       fetch('https://smartexpenseeeee.herokuapp.com/signup', {
         method: 'POST',
         headers: {

@@ -120,6 +120,8 @@ class HomeScreen extends React.Component {
         newStatus = {JSON.stringify(newStatus)}
         newMoney = {JSON.stringify(newMoney)}
         newCategory = {JSON.stringify(newCategory)}
+        income = {JSON.stringify(incomeUser)}
+        saving = {JSON.stringify(savingUser)}
       />
     )
   }
@@ -150,26 +152,27 @@ class ProfileScreen extends React.Component {
 }
 
 class HistoryScreen extends React.Component {
+
   static navigationOptions = {
-    drawerLabel: ({tintColor}) => (
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-      <DatePicker
-      defaultDate={new Date(2018, 4, 4)}
-      minimumDate={new Date(2018, 1, 1)}
-      maximumDate={new Date(2018, 12, 31)}
-      locale={"en"}
-      timeZoneOffsetInMinutes={undefined}
-      modalTransparent={false}
-      animationType={"fade"}
-      androidMode={"default"}
-      placeHolderText="Click to review History"
-      textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
-      placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
-      onDateChange={this.setDate}
-      disabled={false}
-      />
-      </View>),
-    // drawerLabel: 'History',
+    // drawerLabel: ({tintColor}) => (
+    //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+    //   <DatePicker
+    //   defaultDate={new Date(2018, 4, 4)}
+    //   minimumDate={new Date(2018, 1, 1)}
+    //   maximumDate={new Date(2018, 12, 31)}
+    //   locale={"en"}
+    //   timeZoneOffsetInMinutes={undefined}
+    //   modalTransparent={false}
+    //   animationType={"fade"}
+    //   androidMode={"default"}
+    //   placeHolderText="Click to review History"
+    //   textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
+    //   placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
+    //   onDateChange={this.setDate}
+    //   disabled={false}
+    //   />
+    //   </View>),
+    drawerLabel: 'History',
     drawerIcon: ({tintColor}) => (
       <Icon name='timer' style={{color: tintColor}}/>
     )
@@ -178,7 +181,7 @@ class HistoryScreen extends React.Component {
   render() {
     const {navigation} = this.props;
     return(
-      <History navigation={navigation}/>
+      <History navigation={navigation} userId = {JSON.stringify(idUser)}/>
     )
   }
 }
@@ -191,9 +194,9 @@ class StatisticScreen extends React.Component{
     )
   };
   render() {
-    const {navigate} = this.props.navigation;
+    const {navigation} = this.props;
     return(
-      <StatisticPage/>
+      <StatisticPage navigation={navigation} userId = {JSON.stringify(idUser)} income = {JSON.stringify(incomeUser)}/>
     )
   }
 }

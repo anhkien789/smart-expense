@@ -1,11 +1,71 @@
 import React from 'react';
 import {StyleSheet, Text, View, Dimensions, TouchableOpacity, Image} from 'react-native';
-import { Container, Header, Icon, Button, Grid, Row, Col} from 'native-base';
+import { Container, Header, Icon, Grid, Row, Col, DatePicker} from 'native-base';
 
+var dateArray= []
+var day = ''
+var month = ''
+var year = ''
 export default class History extends React.Component {
 
-  render() {
+  constructor(props) {
     
+    super(props);
+    this.state = { 
+      chosenDate: new Date(),
+      total: 0,
+      foodnumber: 0,
+      transportnumber: 0,
+      shoppingnumber: 0,
+    }
+
+    this.setDate = this.setDate.bind(this)
+  }
+  setDate(newDate) {
+    this.setState({ chosenDate: newDate });
+  }
+
+  handleLoadHistory() {
+    fetch(`https://smartexpenseeeee.herokuapp.com/getExpenseByDate/${year}-${month}-${day}`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: JSON.parse(this.props.userId)
+      })
+    })
+    .then(response => response.json())
+    .then(response => response.length != 0 ?
+      this.setState({
+        total: response[0].total,
+        foodnumber: response[0].foodOdrink,
+        transportnumber: response[0].transportation,
+        shoppingnumber: response[0].shopping
+      })
+      :
+      this.setState({
+        total: 0,
+        foodnumber: 0,
+        transportnumber: 0,
+        shoppingnumber: 0
+      })
+    )
+    //.then(response => console.log(response))
+    .catch(err => console.error('error fetching data', err))
+  }
+
+  render() {
+    dateArray= this.state.chosenDate.toString().substr(4,12).split(' ')
+    day = dateArray[1]
+    month = dateArray[0]
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    month = months.indexOf(month) + 1
+    if (month < 10) {
+      month = '0' + month.toString()
+    }
+    year = dateArray[2]
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -18,11 +78,31 @@ export default class History extends React.Component {
             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (30/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>History</Text>
           </View>
           <View style={styles.datetext}>
-            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Date: 04/04/2019</Text>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Date:</Text>
+            <View style={{ marginLeft: (Dimensions.get('window').height * 1)/14 * (5/60) ,alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'white', borderRadius: (Dimensions.get('window').height * 1)/14 * (18/60)}}>
+              <DatePicker 
+              defaultDate={new Date(2018, 4, 4)}
+              minimumDate={new Date(2018, 1, 1)}
+              maximumDate={new Date(2020, 12, 31)}
+              locale={"en"}
+              timeZoneOffsetInMinutes={undefined}
+              modalTransparent={false}
+              animationType={"fade"}
+              androidMode={"default"}
+              placeHolderText="Select date"
+              textStyle={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}
+              placeHolderTextStyle={{ color: "#d3d3d3" }}
+              onDateChange={this.setDate}
+              disabled={false}
+              />
+            </View>
           </View>
+          <TouchableOpacity style={styles.loadhistory} onPress={this.handleLoadHistory.bind(this)}>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Load History</Text>
+          </TouchableOpacity>
           <View style={styles.boxview}>
             <View style={styles.boxtotal}>
-              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (25/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Total: $65</Text>
+              <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (25/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Total: ${this.state.total}</Text>
             </View>
             <View style={styles.boxfoodanddrink}>
               <View style={styles.foodanddrink}>
@@ -32,7 +112,7 @@ export default class History extends React.Component {
                 <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Food/Drink</Text>
               </View>
               <View style={styles.foodanddrinkprice}>
-                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$15</Text>
+                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>${this.state.foodnumber}</Text>
               </View>
             </View>
             <View style={styles.boxtransport}>
@@ -43,7 +123,7 @@ export default class History extends React.Component {
                 <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Transports</Text>
               </View>
               <View style={styles.transportprice}>
-                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$20</Text>
+                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>${this.state.transportnumber}</Text>
               </View>
             </View>
             <View style={styles.boxshopping}>
@@ -54,7 +134,7 @@ export default class History extends React.Component {
                 <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Shopping</Text>
               </View>
               <View style={styles.shoppingprice}>
-                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>$30</Text>
+                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (16/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>${this.state.shoppingnumber}</Text>
               </View>
             </View>
           </View>
@@ -94,16 +174,29 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   historytext: {
-    marginTop: (Dimensions.get('window').height * 1)/14 * (10/60)
+    
   },
   datetext: {
-    marginTop: (Dimensions.get('window').height * 1)/14 * (10/60)
+    marginTop: (Dimensions.get('window').height * 1)/14 * (10/60),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  loadhistory: {
+    marginTop: (Dimensions.get('window').height * 1)/14 * (10/60),
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: (Dimensions.get('window').height * 1)/14 * (200/60),
+    height: (Dimensions.get('window').height * 1)/14 * (50/60),
+    borderRadius: (Dimensions.get('window').height * 1)/14 * (18/60),
+    borderColor: 'white'
   },
   boxview: {
     borderRadius: (Dimensions.get('window').height * 1)/14 * (18/60),
     marginTop: (Dimensions.get('window').height * 1)/14 * (10/60),
     width: (Dimensions.get('window').height * 1)/14 * (310/60),
-    height: (Dimensions.get('window').height * 1)/14 * (600/60),
+    height: (Dimensions.get('window').height * 1)/14 * (500/60),
     backgroundColor: 'white',
     alignItems: 'center',
     shadowColor: '#000000',

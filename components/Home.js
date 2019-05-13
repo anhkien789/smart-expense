@@ -9,6 +9,8 @@ var status = ''
 var money = ''
 var category = ''
 var visibleModal123 = null
+var expenseNoti = ''
+var number = 0
 
 export default class Home extends Component {
 
@@ -24,7 +26,11 @@ export default class Home extends Component {
       shoppingmoney: 0,
       expenseId: '',
       total: 0,
-      visibleModal: ''
+      visibleModal: null,
+      notimoney: 0,
+      saving: 0,
+      income: 0,
+      respone: []
     }; 
 
     status = JSON.parse(this.props.newStatus)
@@ -38,6 +44,7 @@ export default class Home extends Component {
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
     Voice.onSpeechResults = this.onSpeechResults.bind(this)
 
+    this.handleChangeSomething.bind(this)
     this.handleDeny.bind(this)
     this.startAgain.bind(this)
   }
@@ -104,7 +111,11 @@ export default class Home extends Component {
   // }
 
   async componentDidMount(){
-    
+    this.setState({
+      notimoney : (JSON.parse(this.props.income) - (JSON.parse(this.props.income) * JSON.parse(this.props.saving) / 100)) / 30,
+      saving: JSON.parse(this.props.saving),
+      income: JSON.parse(this.props.income)
+    })
     fetch('https://smartexpenseeeee.herokuapp.com/checkExpenseExist', {
       method: 'POST',
       headers: {
@@ -141,7 +152,6 @@ export default class Home extends Component {
         expenseId: response._id
       }))
       .catch(err => console.error('error fetching data', err))
-      //: console.log(response[0])
       : this.setState({
         foodmoney: response[0].foodOdrink,
         transportmoney: response[0].transportation,
@@ -162,6 +172,30 @@ export default class Home extends Component {
       console.error(error)
     }
   }
+
+  // componentWillMount() {
+  //   fetch('https://smartexpenseeeee.herokuapp.com/expenseChecking', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       // income: this.state.income,
+  //       // saving: this.state.saving,
+  //       // expId: this.state.expenseId
+  //       income: this.state.income,
+  //       saving: this.state.saving,
+  //       expId: expenseNoti
+  //     })
+  //   })
+  //   .then(response => response.json())
+  //   .then(response => console.log(response))
+  //   .then(response => response.length == 0 ?
+  //     this.setState({visibleModal: null}):
+  //     this.setState({visibleModal: 'bottom'})
+  //   )
+  // }
 
   // handleStatus(e) {
   //   this.setState({status: e})
@@ -240,8 +274,40 @@ export default class Home extends Component {
     .then(status = '')
     .then(this.startAgain.bind(this))
   }
+
+  handleChangeSomething(response) {
+    if ((response.length == 0 && number == 0) || (response.length == undefined && number == 0)) {
+      this.setState({visibleModal: null})
+    } else if(response.length != 0 && number == 0){
+      this.setState({visibleModal: 'bottom'})
+      number = 1
+    }
+    
+  }
  
   render() {
+    fetch('https://smartexpenseeeee.herokuapp.com/expenseChecking', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        // income: this.state.income,
+        // saving: this.state.saving,
+        // expId: this.state.expenseId
+        income: this.state.income,
+        saving: this.state.saving,
+        expId:  this.state.expenseId
+      })
+    })
+    .then(response => response.json())
+    // .then(response => console.log(response.length))
+    .then(response => this.handleChangeSomething(response))
+    
+    // const newExpense = this.state.expenseId
+    // expenseNoti = newExpense
+    //console.log(expenseNoti)
     var str = this.state.results[0];
     if (str != undefined) {
       // this.setState({str: this.state.results.split(' ')})
@@ -438,7 +504,7 @@ export default class Home extends Component {
                             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}></Text>
             }
           </View>
-          <Button onPress={() => this.setState({visibleModal: 'fancy'})} title='Fancy!'/>
+          {/* <Button onPress={() => this.setState({visibleModal: 'fancy'})} title='Fancy!'/> */}
           <Modal 
             isVisible= {visibleModal123 === 'fancy'}
             // isVisible = {this.state.visibleModal === 'fancy'}
@@ -453,10 +519,26 @@ export default class Home extends Component {
           >
             <View style={styles.contentModal}>
             <Text style={styles.contentTitleModal}>Amount of {category}</Text>
-              <Text style={styles.contentTitleModal}>Do you mean ${status}?</Text>
-              <Text style={styles.contentTitleModal}>Say "Confirm" to save money OR "Deny" to start again!</Text>
+              <Text style={styles.contentTitleModal1}>Do you mean ${status}?</Text>
+              <Text style={styles.contentTitleModal1}>Say "Confirm" to save money OR "Deny" to start again!</Text>
             </View>
-            <Button onPress={() => this.setState({visibleModal: null})} title='close'/>
+          </Modal>
+          <Modal
+          isVisible={this.state.visibleModal === 'bottom'}
+          onSwipeComplete={() => this.setState({ visibleModal: null })}
+          swipeDirection={['up', 'left', 'right', 'down']}
+          style={styles.bottomModal}
+          >
+            <View style={styles.contentModal}>
+              <Text style={styles.contentTitleWarning}>Warning!!!</Text>
+              <Text style={styles.contentTitleMessage1}>Today, you have over-expense ${this.state.total- this.state.notimoney} in average</Text>
+              <Text style={styles.contentTitleMessage2}>You should consider spending next days</Text>
+            </View>
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity style={styles.closebutton} onPress={() => this.setState({visibleModal: null})}>
+                <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontFamily: 'Arial Rounded MT Bold', color: 'white'}}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </Modal>
         </View>
         <View style={styles.footer}>
@@ -644,92 +726,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 12,
     textAlign: 'center'
+  },
+  contentTitleModal1: {
+    fontSize: 15,
+    marginBottom: 12,
+    textAlign: 'center'
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  contentTitleWarning:{
+    fontSize: 20,
+    marginBottom: 12,
+    textAlign: 'center',
+    color: 'red'
+  },
+  contentTitleMessage1: {
+    fontSize: 15,
+    marginBottom: 12,
+    textAlign: 'center'
+  },
+  contentTitleMessage2: {
+    fontSize: 15,
+    marginBottom: 12,
+    textAlign: 'center'
+  },
+  closebutton: {
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: (Dimensions.get('window').height * 1)/14 * (200/60),
+    height: (Dimensions.get('window').height * 1)/14 * (50/60),
+    borderRadius: (Dimensions.get('window').height * 1)/14 * (18/60),
+    borderColor: 'white',
+    textAlign: 'center',
+    backgroundColor: '#FF5148'
   }
 })
-
-
-// import React from 'react';
-// import {Platform, StyleSheet, Text, View, Button} from 'react-native';
-
-// import Voice from 'react-native-voice'
-
-// export default class App extends React.Component {
-
-//   constructor(Props) {
-//     super(Props)
-//     this.state = {
-//       recognized: '',
-//       started: '',
-//       results: []
-//     }
-
-//     Voice.onSpeechStart = this.onSpeechStart.bind(this)
-//     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
-//     Voice.onSpeechResults = this.onSpeechResults.bind(this)
-//   }
-
-//   componentWillUnmount() {
-//     Voice.destroy().then(Voice.removeAllListeners)
-//   }
-
-//   onSpeechStart(e){
-//     this.setState({
-//       started: '√'
-//     })
-//   }
-
-//   onSpeechRecognized(e){
-//     this.setState({
-//       recognized: '√'
-//     })
-//   }
-
-//   onSpeechResults(e){
-//     this.setState({
-//       results: e.value
-//     })
-//   }
-
-//   async startRecognition(e){
-//     this.setState({
-//       recognized: '',
-//       started: '',
-//       results: []
-//     })
-//     try {
-//       await Voice.start('en-US')
-//     } catch (error) {
-//       console.error(error)
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Button style={styles.button} onPress={this.startRecognition.bind(this)} title="Start"/>
-//         <Text style={styles.transcript}>Transcript</Text>
-//         {this.state.results.map((result,i) =>
-//           <Text style={styles.result} key={i}>{result}</Text>
-//         )}
-//       </View>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-//   button: {
-//     padding: 10
-//   },
-//   transcript: {
-//     padding: 10
-//   },
-//   result: {
-//     color: 'red'
-//   }
-// });

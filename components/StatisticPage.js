@@ -1,156 +1,73 @@
 
-//PIECHART
-import React from 'react'
-import { View, Text, Dimensions, graphStyle} from 'react-native'
-
-import {PieChart, BarChart } from 'react-native-chart-kit'
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native'
+import { Container, Header, Tab, Tabs, TabHeading, ScrollableTab, Content, Icon} from 'native-base';
+import ExpenseTab from './ExpenseTab.js';
+import SavingTab from './SavingTab.js';
 
 export default class StatisticPage extends React.Component {
-  render() {
-    
-    const chartConfig = {
-      // backgroundGradientFrom: '#1E2923',
-      // backgroundGradientTo: '#08130D',
-      // color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-      // strokeWidth: 3 // optional, default 3
-      backgroundColor: '#022173',
-      backgroundGradientFrom: '#022173',
-      backgroundGradientTo: '#1b3fa0',
-      color: (opacity = 3) => `rgba(255, 255, 255, ${opacity})`,
-      // strokeWidth: 2,
-      decimalPlaces: 1,
-      strokeWidth: 2,
-    // style:{
-    //   flex:'center'
-    // }
-      style: {
-        paddingRight: 100
-      }
-    
-    }
-    const piedata = [
-      { name: 'Food&Drink', population: 21500000, color: 'blue', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Tranports', population: 2800000, color: 'yellow', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Shopping', population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      
-    ]
-    const bardata = {
-      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-      datasets: [{
-        data: [ 20, 45, 28, 80, 99, 43, 45, 76, 54, 89, 12, 64 ],
-        width: 5
-      }]
-  }
-    return(
-      <View>
-        <View style={{marginTop: 44}}>
-          <Text>
-          Pie Chart
-          </Text>
-          <PieChart
-            data={piedata}
-            width={Dimensions.get('window').width}
-            height={200}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            paddingLeft="5"
-            
-          /> 
-        </View>
-        <View style={{marginLeft: 1}}>
-          <Text>BarChart</Text>
-          <BarChart
-            // style={style}
-            data={bardata}
-            width={(Dimensions.get('window').width) - 10}
-            height={300}
-            yAxisLabel={"$"}
-            chartConfig={chartConfig}
-            
-            style={{
-              marginVertical: 8,
-              borderRadius: 16
-            }}
-            
-          /> 
-        </View>
 
-      </View>
-    )
+  constructor() {
+    super()
+    this.state = { userId: '', income: 0}
+  }
+
+  componentDidMount() {
+    this.setState({
+      userId: JSON.parse(this.props.userId),
+      income: JSON.parse(this.props.income)
+    })
+  }
+
+  render() {
+    return (
+      <Container style={{backgroundColor: '#FF5148'}}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.button} onPress={()=> this.props.navigation.openDrawer()}>
+            <Icon name='menu' style={styles.iconmenu}/>
+          </TouchableOpacity>
+          <View style={styles.textstatistic}>
+            <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Statistic</Text>
+            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>{JSON.parse(this.props.userId)}</Text> */}
+          </View>
+        </View>
+        <Content  hasTabs>
+        <Tabs  renderTabBar={()=> <ScrollableTab style={{backgroundColor: '#FF948F'}}/>}>
+          <Tab heading={<TabHeading style={{backgroundColor: '#FF948F'}}><Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Expense Statistic</Text></TabHeading>}>
+            <ExpenseTab  userId = {this.state.userId}/>
+          </Tab>
+          <Tab heading={<TabHeading style={{backgroundColor: '#FF948F'}}><Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Saving Statistic</Text></TabHeading>}>
+            <SavingTab userId = {this.state.userId} income = {this.state.income}/>
+          </Tab>
+          
+        </Tabs>
+        </Content>
+      </Container>
+    );
   }
 }
 
-
-// in Expo - swipe left to see the following styling, or create your own
-// const chartConfigs = [
-//   {
-//     backgroundColor: '#000000',
-//     backgroundGradientFrom: '#1E2923',
-//     backgroundGradientTo: '#08130D',
-//     color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-//     style: {
-//       borderRadius: 16
-//     }
-//   },
-//   {
-//     backgroundColor: '#022173',
-//     backgroundGradientFrom: '#022173',
-//     backgroundGradientTo: '#1b3fa0',
-//     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//     style: {
-//       borderRadius: 16
-//     }
-//   },
-//   {
-//     backgroundColor: '#ffffff',
-//     backgroundGradientFrom: '#ffffff',
-//     backgroundGradientTo: '#ffffff',
-//     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`
-//   },
-//   {
-//     backgroundColor: '#26872a',
-//     backgroundGradientFrom: '#43a047',
-//     backgroundGradientTo: '#66bb6a',
-//     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//     style: {
-//       borderRadius: 16
-//     }
-//   },
-//   {
-//     backgroundColor: '#000000',
-//     backgroundGradientFrom: '#000000',
-//     backgroundGradientTo: '#000000',
-//     color: (opacity = 1) => `rgba(${255}, ${255}, ${255}, ${opacity})`
-//   }, {
-//     backgroundColor: '#0091EA',
-//     backgroundGradientFrom: '#0091EA',
-//     backgroundGradientTo: '#0091EA',
-//     color: (opacity = 1) => `rgba(${255}, ${255}, ${255}, ${opacity})`
-//   },
-//   {
-//     backgroundColor: '#e26a00',
-//     backgroundGradientFrom: '#fb8c00',
-//     backgroundGradientTo: '#ffa726',
-//     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//     style: {
-//       borderRadius: 16
-//     }
-//   },
-//   {
-//     backgroundColor: '#b90602',
-//     backgroundGradientFrom: '#e53935',
-//     backgroundGradientTo: '#ef5350',
-//     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//     style: {
-//       borderRadius: 16
-//     }
-//   },
-//   {
-//     backgroundColor: '#ff3e03',
-//     backgroundGradientFrom: '#ff3e03',
-//     backgroundGradientTo: '#ff3e03',
-//     color: (opacity = 1) => `rgba(${0}, ${0}, ${0}, ${opacity})`
-//   }
-// ]
-
+const styles = StyleSheet.create ({
+  header: {
+    borderWidth: 1,
+    borderColor: '#FF948F',
+    marginTop: (Dimensions.get('window').height * 1)/20,
+    height: (Dimensions.get('window').height * 1)/14 * (44/60),
+    width: Dimensions.get('window').width,
+    backgroundColor: '#FF948F',
+    flexDirection: 'row',
+    alignItems:'center'
+  },
+  button: {
+    width: (Dimensions.get('window').height * 1)/14 * (50/60),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  iconmenu: {
+    color: 'black'
+  },
+  textstatistic: {
+    width: (Dimensions.get('window').width - ((Dimensions.get('window').height * 1)/14 * (50/60))*2),
+    alignItems: 'center'
+  }
+})
