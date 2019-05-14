@@ -1,6 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions, Alert } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Footer, Icon, DatePicker } from 'native-base';
+import { Image, StyleSheet, View, Text, TouchableOpacity, Dimensions, Alert } from 'react-native'
+import { Input, Icon } from 'native-base';
 import ImagePicker from 'react-native-image-picker'
 
 
@@ -27,9 +27,6 @@ export default class Profile extends React.Component {
       errorSaving: ''
     }
   }
-  // state = {
-  //   photo: null
-  // }
 
   componentDidMount() {
     this.setState({
@@ -254,11 +251,6 @@ export default class Profile extends React.Component {
               errorSaving: ''
             })
             )
-            // .then(this.setState({
-            //   editSaving: false,
-            //   showSaving: this.state.savingText,
-            //   savingText: ''
-            // }))
             .catch(err => console.error('error fetching data', err))
           }
         },
@@ -274,7 +266,6 @@ export default class Profile extends React.Component {
   
 
   render() {
-    // const {photo} = this.state
     return(
       <View style={styles.container}>
         <View style={styles.header}>
@@ -450,7 +441,6 @@ const styles = StyleSheet.create({
   header: {
     borderWidth: (Dimensions.get('window').height * 1)/14 * (1/60),
     borderColor: '#FF5148',
-    // marginTop: (Dimensions.get('window').height * 1)/20,
     height: (Dimensions.get('window').height * 1)/14 * (375/60),
     width: Dimensions.get('window').width,
     backgroundColor: '#FF5148',
@@ -458,7 +448,6 @@ const styles = StyleSheet.create({
   },
   viewmenuprofile: {
     flexDirection: 'row',
-    // marginTop: (Dimensions.get('window').height * 1)/14 * (5/60)
     marginTop: (Dimensions.get('window').height * 1)/20
   },
   button: {

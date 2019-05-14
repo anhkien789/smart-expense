@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet, View, TouchableHighlight, Text, Dimensions, Alert,TouchableOpacity } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Footer } from 'native-base';
+import { Container, Content, Input } from 'native-base';
 
 export default class Login extends Component {
 
@@ -13,7 +13,6 @@ export default class Login extends Component {
 
   handleLogin() {
     if (this.state.userName == '' || this.state.passWord == '') {
-      // this.setState({messages: 'Please input the Username/Password'})
       Alert.alert('Error'
       , 'Please input the Username/Password',
       [
@@ -35,7 +34,6 @@ export default class Login extends Component {
         })
       })
       .then(response => response.json())
-      // .then(messages => console.log(messages))
       .then(messages => messages.message == 'Invalid, please try again' ? 
         Alert.alert('Error'
         , 'Invalid! Please try again!',
@@ -46,7 +44,6 @@ export default class Login extends Component {
           }
         ]
         ) 
-        // this.setState({messages: 'something wrong'})
         : this.props.navigate('Home', {
           userId: messages._id,
           address: messages.address,
@@ -56,9 +53,9 @@ export default class Login extends Component {
           userName: messages.userName,
           status: '',
           category: '',
-          money: ''
+          money: '',
+          number: 0
         })
-        // : console.log(messages._id)
       )
       .catch(err => console.error('error fetching data', err))
     }
@@ -97,8 +94,6 @@ export default class Login extends Component {
             <TouchableOpacity style={{borderBottomWidth: 1, borderBottomColor: 'blue'}}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Versions: 1.0.0</Text>
             </TouchableOpacity>
-            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Versions: 1.0.0</Text> */}
-            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}} onPress={()=> this.props.navigate('Info')}>Team: Section 9</Text> */}
             <TouchableOpacity style={{borderBottomWidth: 1, borderBottomColor: 'blue'}} onPress={()=> this.props.navigate('Info')}>
               <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (12/60), fontStyle: 'italic', fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'blue'}}>Team: Section 9</Text>
             </TouchableOpacity>
@@ -126,7 +121,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 1,
     marginTop: (Dimensions.get('window').height * 1)/20 
-    // marginTop: 60
   },
   containerlogin: {
     flexDirection: 'column',

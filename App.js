@@ -1,5 +1,4 @@
 //NAVIGATOR
-
 import React from 'react'
 import { View, Text, Image, StyleSheet, Button, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage'
@@ -24,63 +23,23 @@ var nameUser = ''
 var newStatus = ''
 var newCategory = ''
 var newMoney = ''
+var newNumber = 0
 
 class LoginScreen extends React.Component {
-  // static navigationOptions = {
-  //   drawerLabel: 'Log out',
-  //   drawerIcon: ({ tintColor }) => (
-  //     <Icon name='log-out'/>
-  //   )
-  // };
-  // static navigationOptions = {
-  //   title: 'Login',
-  // };
   render() {
     const {navigate} = this.props.navigation;
     return (
-      // <Button
-      //   title="Go to Jane's profile"
-      //   onPress={() => navigate('Profile', {name: 'Jane'})}
-      // />
       <Login navigate={navigate} />
-      // <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      //   <Text>Home Screen</Text>
-      // </View>
-      // <View style={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
-      //   <Button
-      //   onPress={() => this.props.navigation.navigate('Register')}
-      //   title="Go to notifications"
-      //   />
-      // </View>
     );
   }
 }
 
 class RegisterScreen extends React.Component {
 
-  // static navigationOptions = {
-  //   drawerLabel: 'Notifications',
-  //   drawerIcon: ({ tintColor }) => (
-  //     <Image
-  //       source={require('./components/Shopping-symbol.png')}
-  //       style={[styles.icon, {tintColor: tintColor}]}
-  //     />
-  //   ),
-  // };
-
   render() {
     const {navigate} = this.props.navigation;
     return(
-      // <View style={{flex: 1,alignItems: 'center', justifyContent: 'center'}}>
-      //   <Text>Register Page</Text>
-      // </View>
       <Register navigate={navigate}/>
-      // <View style={{flex: 1,alignItems: 'center', justifyContent: 'center'}}>
-      //   <Button
-      //   onPress={() => this.props.navigation.goBack()}
-      //   title="Go back home"
-      //   />
-      // </View>
     )
   }
 }
@@ -103,7 +62,8 @@ class HomeScreen extends React.Component {
     const userName = navigation.getParam('userName', 'No-userName')
     const status = navigation.getParam('status', 'No-status')
     const category = navigation.getParam('category', 'No-category')
-    const money = navigation.getParam('money', 'No-money') 
+    const money = navigation.getParam('money', 'No-money')
+    const number = navigation.getParam('number', 'No-number') 
     idUser = userId
     addressUser = address
     incomeUser = income
@@ -113,6 +73,7 @@ class HomeScreen extends React.Component {
     newStatus = status
     newCategory = category
     newMoney = money
+    newNumber = number
     return(
       <Home 
         navigation={navigation} 
@@ -122,6 +83,7 @@ class HomeScreen extends React.Component {
         newCategory = {JSON.stringify(newCategory)}
         income = {JSON.stringify(incomeUser)}
         saving = {JSON.stringify(savingUser)}
+        newNumber = {JSON.stringify(newNumber)}
       />
     )
   }
@@ -154,24 +116,6 @@ class ProfileScreen extends React.Component {
 class HistoryScreen extends React.Component {
 
   static navigationOptions = {
-    // drawerLabel: ({tintColor}) => (
-    //   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-    //   <DatePicker
-    //   defaultDate={new Date(2018, 4, 4)}
-    //   minimumDate={new Date(2018, 1, 1)}
-    //   maximumDate={new Date(2018, 12, 31)}
-    //   locale={"en"}
-    //   timeZoneOffsetInMinutes={undefined}
-    //   modalTransparent={false}
-    //   animationType={"fade"}
-    //   androidMode={"default"}
-    //   placeHolderText="Click to review History"
-    //   textStyle={{ color: tintColor, fontFamily: 'Arial Rounded MT Bold' }}
-    //   placeHolderTextStyle={{ color: 'rgba(0,0,0,0.25)' }}
-    //   onDateChange={this.setDate}
-    //   disabled={false}
-    //   />
-    //   </View>),
     drawerLabel: 'History',
     drawerIcon: ({tintColor}) => (
       <Icon name='timer' style={{color: tintColor}}/>
@@ -235,7 +179,6 @@ const HomeStack = createDrawerNavigator({
   Profile: {screen: ProfileScreen},
   History: {screen: HistoryScreen},
   Statistic: {screen: StatisticScreen}
-  // Login: {screen: LoginScreen}
 },
 {
   contentComponent:(props) => (
@@ -254,7 +197,6 @@ const HomeStack = createDrawerNavigator({
                   .then(
                   )
                   .then(
-                    // AsyncStorage.clear()
                     AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove)
                   )
                   .then(props.navigation.navigate('Login'))
@@ -298,28 +240,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      // <Login /> 
       <AppContainer />
     )
   }
 }
-
-// //ALL OF CHART
-
-// // import React from 'react'
-// // import { View } from 'react-native'
-// // import PureChart from 'react-native-pure-chart';
-// // import { } from 'native-base';
-
-// // export default class App extends React.Component {
-// //   render() {
-// //     let sampleData = [30, 200, 170, 250, 10]
-// //     return(
-// //       <View style={{alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 300, height: 300, borderWidth: 1}}>
-// //         <PureChart data={sampleData} type='line' />
-// //       </View>
-// //     )
-// //   }
-// // }
-
-

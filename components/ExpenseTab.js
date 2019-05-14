@@ -82,7 +82,7 @@ export default class ExpenseTab extends React.Component {
       backgroundColor: '#ff5148',
       backgroundGradientFrom: '#FF0000', 
       backgroundGradientTo: '#ffffff',
-      color: (opacity = 3) => `rgba(134, 65, 244, ${opacity})`,
+      color: (opacity = 3) => `rgba(0, 0, 0, ${opacity})`,
       decimalPlaces: 1
     }
     

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, Dimensions, TouchableOpacity, Image} from 'react-native';
-import { Container, Header, Icon, Grid, Row, Col, DatePicker} from 'native-base';
+import { Icon, DatePicker} from 'native-base';
 
 var dateArray= []
 var day = ''
@@ -52,7 +52,6 @@ export default class History extends React.Component {
         shoppingnumber: 0
       })
     )
-    //.then(response => console.log(response))
     .catch(err => console.error('error fetching data', err))
   }
 
@@ -223,7 +222,6 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').height * 1)/14 * (280/60),
     height: (Dimensions.get('window').height * 1)/14 * (64/60),
     backgroundColor: '#FF948F',
-    // justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 4, height: 5 },
@@ -257,7 +255,6 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').height * 1)/14 * (280/60),
     height: (Dimensions.get('window').height * 1)/14 * (64/60),
     backgroundColor: '#FF948F',
-    // justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 4, height: 5 },
@@ -291,7 +288,6 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').height * 1)/14 * (280/60),
     height: (Dimensions.get('window').height * 1)/14 * (64/60),
     backgroundColor: '#FF948F',
-    // justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 4, height: 5 },

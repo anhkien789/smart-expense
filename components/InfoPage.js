@@ -1,13 +1,12 @@
 import React from "react";
 import {
     Text,
-    AppRegistry,
     StyleSheet,
     View,
     Dimensions,
     TouchableOpacity
   } from 'react-native';
-import { Container, Header, Content, Accordion, Icon } from "native-base";
+import { Accordion, Icon } from "native-base";
 const dataArray = [
   { title: "Le Minh Trung Kien", content: '+Specific Jobs: Coder & Designer\n\n+Email: s3651471@rmit.edu.vn'  },
   { title: "Nguyen Quoc Khanh", content: '+Specific Jobs: Coder for Back-end\n\n+Email: s3651072@rmit.edu.vn' },
@@ -18,18 +17,6 @@ const dataArray = [
 export default class InfoPage extends React.Component {
   render() {
     return (
-      // <Container style={styles.container}>
-      //   <Header style={styles.header}>
-      //     <Text style={styles.headerText} >Team Information</Text> 
-      //   </Header>
-      //   <Content padde style={styles.content}>
-      //     <Accordion 
-      //     dataArray={dataArray} 
-      //     icon="add"
-      //     expandedIcon="remove"
-      //     style={styles.accordion}/>
-      //   </Content>
-      // </Container>
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.button} onPress={()=> this.props.navigate('Login')}>

@@ -1,8 +1,8 @@
 //PIECHART
 import React from 'react'
-import { View, Text, Dimensions, ScrollableTabView,ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
-import { Container, Header, Content, Icon, Picker, Form } from "native-base";
-import {PieChart, LineChart } from 'react-native-chart-kit'
+import { View, Text, Dimensions, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Icon, Picker, Form } from "native-base";
+import { LineChart } from 'react-native-chart-kit'
 
 var dataSet = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -47,7 +47,6 @@ export default class SavingTab extends React.Component {
       })
     })
     .then(response => response.json())
-    //.then(response => console.log(response))
     .then(response => response.map((value) => this.onChangeNumber((Number(value._id.month) - 1), value.savingAmout)))
     .then(console.log(this.state.value))
   }
@@ -57,13 +56,12 @@ export default class SavingTab extends React.Component {
     backgroundColor: '#ff5148',
     backgroundGradientFrom: '#FF0000', 
     backgroundGradientTo: '#ffffff',
-    color: (opacity = 3) => `rgba(134, 65, 244, ${opacity})`,
+    color: (opacity = 3) => `rgba(0, 0, 0, ${opacity})`,
     decimalPlaces: 1,
     }
     var linedata = {
       labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
       datasets: [{
-        //data: [ 20, 45, 28, 80, 99, 43, 56, 76, 34, 39, 87, 54],
         data: this.state.value,
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 2 // optional

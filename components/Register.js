@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions, Alert } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Footer, Icon, Button, Toast } from 'native-base';
+import { StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions, Alert } from 'react-native'
+import { Input, Icon } from 'native-base';
 
 export default class Register extends Component {
 
@@ -51,9 +51,7 @@ export default class Register extends Component {
         })
       })
       .then(response => response.json())
-      // .then(messages => console.log(messages))
       .then(messages => messages.message == 'Signup successfull!!' ? 
-        // 
         Alert.alert('Success'
                   , 'Registered successfully',
                   [
@@ -90,7 +88,6 @@ export default class Register extends Component {
               <Input placeholder='Username:' onChangeText={(s)=> this.setState({userName: s})} value={this.state.userName}/>
             </View>
             <View style={styles.erroridbox}>
-              {/* <Text style={{color: 'red', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Existing Name</Text> */}
               {this.state.messages.message == 'Username exsit, please enter other one' ?
                 (<Text style={{color: 'red', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>Existing Username!</Text>) :
                 (<Text/>)
@@ -128,7 +125,6 @@ export default class Register extends Component {
               </TouchableHighlight>  
             </View>
             <View style={styles.errortext}>
-              {/* <Text style={{color: 'red', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}>{this.state.messages.message}</Text> */}
               {this.state.messages.message == 'Username exsit, please enter other one' ? 
                 (<Text style={{color: 'red', fontSize: (Dimensions.get('window').height * 1)/14 * (18/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold'}}></Text>) : 
                 this.state.messages._message == 'User validation failed' ? 

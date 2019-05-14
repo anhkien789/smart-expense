@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native'
-import { Container, Header, Tab, Tabs, TabHeading, ScrollableTab, Content, Icon} from 'native-base';
+import { Container, Tab, Tabs, TabHeading, ScrollableTab, Content, Icon} from 'native-base';
 import ExpenseTab from './ExpenseTab.js';
 import SavingTab from './SavingTab.js';
 
@@ -28,7 +28,6 @@ export default class StatisticPage extends React.Component {
           </TouchableOpacity>
           <View style={styles.textstatistic}>
             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Statistic</Text>
-            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>{JSON.parse(this.props.userId)}</Text> */}
           </View>
         </View>
         <Content  hasTabs>

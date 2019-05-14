@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, View, TouchableHighlight, Text, TouchableOpacity, Dimensions, Button, Alert } from 'react-native'
-import { Container, Header, Content, Form, Item, Input, Label, Footer, Icon, DatePicker } from 'native-base';
+import { Image, StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { Icon } from 'native-base';
 
 import Voice from 'react-native-voice'
 import Modal from 'react-native-modal'
@@ -9,7 +9,6 @@ var status = ''
 var money = ''
 var category = ''
 var visibleModal123 = null
-var expenseNoti = ''
 var number = 0
 
 export default class Home extends Component {
@@ -33,17 +32,21 @@ export default class Home extends Component {
       respone: []
     }; 
 
+    //reset value to origin when log out
     status = JSON.parse(this.props.newStatus)
     money = JSON.parse(this.props.newMoney)
     category = JSON.parse(this.props.newCategory)
+    number = JSON.parse(this.props.newNumber)
 
     this.setDate = this.setDate.bind(this);
      
+    //Voice Configuration
     Voice.onSpeechStart = this.onSpeechStart.bind(this)
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this)
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this)
     Voice.onSpeechResults = this.onSpeechResults.bind(this)
 
+    //bind function
     this.handleChangeSomething.bind(this)
     this.handleDeny.bind(this)
     this.startAgain.bind(this)
@@ -53,70 +56,66 @@ export default class Home extends Component {
     this.setState({ chosenDate: newDate });
   }
 
+  //Stopping Voice recognition when it silent for along time
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners)
   }
 
+  //handle event 
   onSpeechStart(e){
     this.setState({
       started: '√'
     })
   }
 
+  //handle event
   onSpeechEnd(e) {
     console.log('onSpeechEnd')
   }
 
+  //handle event
   onSpeechStartReset(e){
     this.setState({
       started: '√'
     })
   }
 
+  //handle event
   onSpeechRecognized(e){
     this.setState({
       recognized: '√'
     })
   }
 
+  //handle event
   onSpeechRecognizedReset(e){
     this.setState({
       recognized: '√'
     })
   }
 
+  //handle event
   onSpeechResults(e){
     this.setState({
       results: e.value
     })
   }
 
+  //handle event
   onSpeechResultsReset(e){
     this.setState({
       results: e.value
     })
   }
 
-  // async startRecognition(e){
-  //   this.setState({
-  //     recognized: '',
-  //     started: '',
-  //     results: []
-  //   })
-  //   try {
-  //     await Voice.start('en-US')
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
+  //handle event before render in Homepage
   async componentDidMount(){
     this.setState({
-      notimoney : (JSON.parse(this.props.income) - (JSON.parse(this.props.income) * JSON.parse(this.props.saving) / 100)) / 30,
-      saving: JSON.parse(this.props.saving),
-      income: JSON.parse(this.props.income)
+      notimoney : ((JSON.parse(this.props.income) - (JSON.parse(this.props.income) * JSON.parse(this.props.saving) / 100)) / 30).toFixed(2), //the money exceed
+      saving: JSON.parse(this.props.saving), //saving in percent when pass through from login
+      income: JSON.parse(this.props.income) //income when pass through from login
     })
-    fetch('https://smartexpenseeeee.herokuapp.com/checkExpenseExist', {
+    fetch('https://smartexpenseeeee.herokuapp.com/checkExpenseExist', { //API to check the existed expense today
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -127,15 +126,14 @@ export default class Home extends Component {
       })
     })
     .then(response => response.json())
-    //.then(response => console.log(response))
-    .then(response => response.length == 0 ?
-      fetch('https://smartexpenseeeee.herokuapp.com/addExpense', {
+    .then(response => response.length == 0 ? // condition of the existed expense
+      fetch('https://smartexpenseeeee.herokuapp.com/addExpense', { //API when the expense is not existed
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        body: JSON.stringify({  // set value to the default
           foodOdrink: 0,
           transportation: 0,
           shopping: 0,
@@ -144,7 +142,7 @@ export default class Home extends Component {
         })
       })
       .then(response => response.json())
-      .then(response => this.setState({
+      .then(response => this.setState({ //get the response from server and then add to all values
         foodmoney: response.foodOdrink,
         transportmoney: response.transportation,
         shoppingmoney: response.shopping,
@@ -152,7 +150,7 @@ export default class Home extends Component {
         expenseId: response._id
       }))
       .catch(err => console.error('error fetching data', err))
-      : this.setState({
+      : this.setState({ // condition when the expense existed
         foodmoney: response[0].foodOdrink,
         transportmoney: response[0].transportation,
         shoppingmoney: response[0].shopping,
@@ -161,7 +159,8 @@ export default class Home extends Component {
       })
     )
     .catch(err => console.error('error fetching data', err))
-    this.setState({
+    //auto run Voice Recognition from the beginning
+    this.setState({ 
       recognized: '',
       started: '',
       results: []
@@ -173,36 +172,8 @@ export default class Home extends Component {
     }
   }
 
-  // componentWillMount() {
-  //   fetch('https://smartexpenseeeee.herokuapp.com/expenseChecking', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       // income: this.state.income,
-  //       // saving: this.state.saving,
-  //       // expId: this.state.expenseId
-  //       income: this.state.income,
-  //       saving: this.state.saving,
-  //       expId: expenseNoti
-  //     })
-  //   })
-  //   .then(response => response.json())
-  //   .then(response => console.log(response))
-  //   .then(response => response.length == 0 ?
-  //     this.setState({visibleModal: null}):
-  //     this.setState({visibleModal: 'bottom'})
-  //   )
-  // }
-
-  // handleStatus(e) {
-  //   this.setState({status: e})
-  // }
+  //handle event when say "Deny" and then start Voice from the beginning
   async handleDeny() {
-    // e = []
-    // console.log(e)
     Voice.cancel()
     .then(
       status = '',
@@ -212,6 +183,7 @@ export default class Home extends Component {
     .then(this.startAgain.bind(this))
   }
 
+  //handle event for starting Voice again
   async startAgain(e){
     console.log('startRecognition')
     this.setState({
@@ -226,6 +198,7 @@ export default class Home extends Component {
     }
   }
 
+  //handle event for saving food money and then start Voice from the beginning
   async handleChangeFoodMoney() {
     this.setState({
       foodmoney: this.state.foodmoney + Number(money),
@@ -240,6 +213,7 @@ export default class Home extends Component {
     .then(this.startAgain.bind(this))
   }
 
+  //handle event for saving transport money and then start Voice from the beginning
   async handleChangeTransportMoney() {
     this.setState({
       transportmoney: this.state.transportmoney + Number(money),
@@ -254,27 +228,18 @@ export default class Home extends Component {
     .then(this.startAgain.bind(this))
   }
 
+  //handle event for saving shopping money and then start Voice from the beginning
   async handleChangeShoppingMoney() {
     this.setState({
       shoppingmoney: this.state.shoppingmoney + Number(money),
       total: this.state.total + Number(money)
     })
-    // fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
-    //   method: 'PUT',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     shopping: this.state.shoppingmoney,
-    //     total: this.state.total,
-    //   })
-    // })
     Voice.cancel()
     .then(status = '')
     .then(this.startAgain.bind(this))
   }
 
+  //handle event for notification
   handleChangeSomething(response) {
     if ((response.length == 0 && number == 0) || (response.length == undefined && number == 0)) {
       this.setState({visibleModal: null})
@@ -286,56 +251,47 @@ export default class Home extends Component {
   }
  
   render() {
-    fetch('https://smartexpenseeeee.herokuapp.com/expenseChecking', {
+    fetch('https://smartexpenseeeee.herokuapp.com/expenseChecking', { //API for notification
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        // income: this.state.income,
-        // saving: this.state.saving,
-        // expId: this.state.expenseId
         income: this.state.income,
         saving: this.state.saving,
         expId:  this.state.expenseId
       })
     })
     .then(response => response.json())
-    // .then(response => console.log(response.length))
     .then(response => this.handleChangeSomething(response))
     
-    // const newExpense = this.state.expenseId
-    // expenseNoti = newExpense
-    //console.log(expenseNoti)
+    //change Voice result from the string to array string to check single word
     var str = this.state.results[0];
     if (str != undefined) {
-      // this.setState({str: this.state.results.split(' ')})
       var res = str.split(' ');
       console.log(res)
       res.map((r,i) => {
-        if (status == '' && (r == 'spending' || r == 'Spending')) {
-          // this.handleStatus('spending')
-          // console.log(this.state.status)
+        if (status == '' && (r == 'spending' || r == 'Spending')) { //when saying "spending", the status value will change to "spending"
           status = 'spending'
           console.log(status)
         } 
-        else if (status == 'spending' && r == 'food') {
+        else if (status == 'spending' && r == 'food') { //when saying "food", the status value will change to "food"
           status = 'food'
           category = 'food'
           console.log(status)
         } 
-        else if (status == 'food' && !isNaN(r)) {
+        else if (status == 'food' && !isNaN(r)) { //when saying "any number", the status value will change to "that number"
           status = r
           money = r
           console.log(status)
           visibleModal123 = 'fancy'
         }
-        else if (!isNaN(status) && category == 'food' && r == 'confirm'){
+        else if (!isNaN(status) && category == 'food' && r == 'confirm'){ //when saying "confirm", the status value will change to "confirm"
           status = r
           console.log(status)
           visibleModal123 = null
-          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, { //API to save the food money
             method: 'PUT',
             headers: {
               Accept: 'application/json',
@@ -348,22 +304,22 @@ export default class Home extends Component {
           })
           .then(this.handleChangeFoodMoney.bind(this))
         }
-        else if (status == 'spending' && r == 'transport') {
+        else if (status == 'spending' && r == 'transport') { //when saying "transport", the status value will change to "transport"
           status = 'transport'
           category = 'transport'
           console.log(status)
         }
-        else if (status == 'transport' && !isNaN(r)) {
+        else if (status == 'transport' && !isNaN(r)) { //when saying "any number", the status value will change to "that number"
           status = r
           money = r
           console.log(status)
           visibleModal123 = 'fancy'
         }
-        else if (!isNaN(status) && category == 'transport' && r == 'confirm'){
+        else if (!isNaN(status) && category == 'transport' && r == 'confirm'){ //when saying "confirm", the status value will change to "confirm"
           status = r
           console.log(status)
           visibleModal123 = null
-          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, { //API to save transport money
             method: 'PUT',
             headers: {
               Accept: 'application/json',
@@ -377,41 +333,28 @@ export default class Home extends Component {
           .then(this.handleChangeTransportMoney.bind(this))
           
         }
-        else if (!isNaN(status) && r == 'deny'){
+        else if (!isNaN(status) && r == 'deny'){ //when saying "deny", the status value will change to "deny"
           status = r
           console.log(status)
           visibleModal123 = null
           {this.handleDeny()}
         }
-        else if (status == 'spending' && r == 'shopping') {
+        else if (status == 'spending' && r == 'shopping') { //when saying "shopping", the status value will change to "shopping"
           status = 'shopping'
           category = 'shopping'
           console.log(status)
         }
-        else if (status == 'shopping' && !isNaN(r)) {
+        else if (status == 'shopping' && !isNaN(r)) { //when saying "any number", the status value will change to "that number"
           status = r
           money = r
           console.log(status)
           visibleModal123 = 'fancy'
-          // Alert.alert('Amount of shopping'
-          // , 'Do you mean ' + '$' + status + '?\n' + 'Touch "Confirm" to save money\nOR "Deny" to start again!',
-          // [
-          //   {
-          //     text: 'Confirm',
-          //     onPress: this.handleChangeShoppingMoney.bind(this)
-          //   },
-          //   {
-          //     text: 'Deny',
-          //     onPress: this.handleDeny.bind(this)
-          //   }
-          // ]
-          // ) 
         }
-        else if (!isNaN(status) && category == 'shopping' && r == 'confirm'){
+        else if (!isNaN(status) && category == 'shopping' && r == 'confirm'){ //when saying "confirm", the status value will change to "confirm"
           status = r
           console.log(status)
           visibleModal123 = null
-          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, {
+          fetch(`https://smartexpenseeeee.herokuapp.com/updateExpense/${this.state.expenseId}`, { //API to save shopping money
             method: 'PUT',
             headers: {
               Accept: 'application/json',
@@ -429,14 +372,8 @@ export default class Home extends Component {
 
     }
   
-    // console.log(this.state.str)
-    // const res = str.split(' ');
-    // console.log(res);
-    // const resSplit = this.state.results.split(' ') 
-    // const str = 'Browse appdividend.com and enjoy coding';
-    // const res = str.split(' ');
-    // console.log(str);
     return (
+      //Front-end
       <View style={styles.containter}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.button} onPress={()=> this.props.navigation.openDrawer()}>
@@ -444,7 +381,6 @@ export default class Home extends Component {
           </TouchableOpacity>
           <View style={styles.texthome}>
             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (22/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>Home</Text>
-            {/* <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: 'black'}}>{JSON.parse(this.props.userId)}</Text> */}
           </View>
         </View>
         <View style={styles.content}>
@@ -492,9 +428,6 @@ export default class Home extends Component {
             </View>
           </View>
           <View style={styles.viewvoice}>
-            {/* <Button style={styles.buttonstart} onPress={this.startAgain.bind(this)} title="Start"/>
-            <Text style={styles.transcript}>Transcript</Text>
-            <Text>{this.state.results}</Text> */}
             <Icon name='mic'/>
             {status == '' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Please say "Spending" to activate Voice Recognition System!</Text> : 
                             status == 'spending' || status == 'Spending' ? <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}>Voice is activated! Please say "Food", "Transport" or "Shopping" to choose category.</Text> : 
@@ -504,10 +437,8 @@ export default class Home extends Component {
                             <Text style={{fontSize: (Dimensions.get('window').height * 1)/14 * (15/60), fontWeight: 'bold', fontFamily: 'Arial Rounded MT Bold', color: '#FF5148', textAlign: 'center'}}></Text>
             }
           </View>
-          {/* <Button onPress={() => this.setState({visibleModal: 'fancy'})} title='Fancy!'/> */}
           <Modal 
             isVisible= {visibleModal123 === 'fancy'}
-            // isVisible = {this.state.visibleModal === 'fancy'}
             backdropColor="#B4B3DB"
             backdropOpacity={0.8}
             animationIn="zoomInDown"
@@ -550,6 +481,8 @@ export default class Home extends Component {
     );
   }
 }
+
+//Front-end configuration
 const styles = StyleSheet.create({
   containter: {
     flex: 1,
